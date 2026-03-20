@@ -1,0 +1,98 @@
+/* ── Stats Grid ─────────────────────────────── */
+
+.stats_grid {
+  display: grid;
+  /* 4 equal columns on desktop, auto-adjusts to screen width */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat_card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  cursor: pointer;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 10px;
+  border: 1px solid #F1F5F9;
+  /* prevent card from ever overflowing its grid cell */
+  min-width: 0;
+  overflow: hidden;
+}
+
+.stat_card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.stat_icon {
+  padding: 14px;
+  border-radius: 14px;
+  display: inline-flex;
+  flex-shrink: 0;   /* icon never squishes */
+}
+
+.stat_content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 0;
+}
+
+.stat_content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0;
+  line-height: 1;
+}
+
+.title {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ── Responsive breakpoints ─────────────────── */
+
+/* Tablet: 2 columns */
+@media (max-width: 1024px) {
+  .stats_grid {
+      grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile: 2 compact columns (fits 2 per row comfortably) */
+@media (max-width: 600px) {
+  .stats_grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+  }
+
+  .stat_card {
+      padding: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+  }
+
+  .stat_content {
+      align-items: flex-start;
+  }
+
+  .stat_content h2 {
+      font-size: 1.6rem;
+  }
+
+  .stat_icon {
+      padding: 10px;
+      border-radius: 10px;
+  }
+}
