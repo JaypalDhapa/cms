@@ -1,0 +1,31 @@
+.layout {
+  display: flex;
+}
+
+.sidebar_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  z-index: 99;
+}
+
+.page_container {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
+  min-width: 0;
+  width: 0;
+  overflow-x: hidden;
+}
+
+.expanded {
+  margin-left: 60px;
+}
+
+.mobile {
+  margin-left: 0;
+  width: 100%;
+}
