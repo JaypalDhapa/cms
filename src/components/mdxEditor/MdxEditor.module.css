@@ -4,28 +4,39 @@
     flex-direction: column;
     border: 1px solid #E2E8F0;
     border-radius: 10px;
-    overflow: visible;
+    overflow: visible;   /* allow slash picker to overflow */
     background: #fff;
     position: relative;
   }
   
-  /* ── Toolbar ───────────────────────────────────────────────── */
+  /* ── FIX 3: Toolbar scroll wrapper ────────────────────────── */
+  /* On mobile the toolbar scrolls horizontally instead of wrapping */
+  .toolbarScroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1px solid #E2E8F0;
+    /* Hide scrollbar visually but keep it functional */
+    scrollbar-width: none;
+  }
+  .toolbarScroll::-webkit-scrollbar { display: none; }
+  
   .toolbar {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     padding: 8px 12px;
     background: #F8FAFC;
-    border-bottom: 1px solid #E2E8F0;
-    flex-wrap: wrap;
-    gap: 6px;
+    /* Don't wrap — scroll instead */
+    white-space: nowrap;
+    min-width: max-content;
   }
   
   .toolbarGroup {
     display: flex;
     align-items: center;
     gap: 2px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
   }
   
   .toolbarSep {
@@ -35,14 +46,13 @@
     flex-shrink: 0;
   }
   
-  /* Heading buttons — distinctive pill style */
+  /* ── Heading buttons ───────────────────────────────────────── */
   .headingBtn {
     padding: 4px 7px;
     border-radius: 5px;
     font-size: 0.7rem;
     font-weight: 700;
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    letter-spacing: 0;
     color: #475569;
     background: none;
     border: 1px solid transparent;
@@ -50,19 +60,12 @@
     transition: all 0.13s;
     line-height: 1;
     user-select: none;
+    flex-shrink: 0;
   }
+  .headingBtn:hover  { background: #EEF2FF; color: #4F46E5; border-color: #C7D2FE; }
+  .headingBtn:active { background: #E0E7FF; }
   
-  .headingBtn:hover {
-    background: #EEF2FF;
-    color: #4F46E5;
-    border-color: #C7D2FE;
-  }
-  
-  .headingBtn:active {
-    background: #E0E7FF;
-  }
-  
-  /* Regular toolbar buttons */
+  /* ── Regular toolbar buttons ───────────────────────────────── */
   .toolbarBtn {
     width: 28px;
     height: 28px;
@@ -79,11 +82,9 @@
     flex-shrink: 0;
     user-select: none;
   }
-  
-  .toolbarBtn:hover { background: #E2E8F0; color: #1E293B; }
+  .toolbarBtn:hover  { background: #E2E8F0; color: #1E293B; }
   .toolbarBtn:active { background: #CBD5E1; }
   
-  /* Image & component buttons — wider */
   .imageBtn,
   .slashBtn {
     width: auto;
@@ -92,14 +93,13 @@
     font-weight: 600;
     gap: 4px;
   }
-  
   .imageBtn { color: #0369A1; }
   .imageBtn:hover { background: #E0F2FE; color: #0369A1; }
   
   .slashBtn { color: #7C3AED; }
   .slashBtn:hover { background: #EDE9FE; color: #7C3AED; }
   
-  /* ── Editor Area ───────────────────────────────────────────── */
+  /* ── Editor area ───────────────────────────────────────────── */
   .editorArea {
     position: relative;
     flex: 1;
@@ -107,7 +107,7 @@
   
   .textarea {
     width: 100%;
-    min-height: 320px;
+    min-height: 340px;
     padding: 18px 20px;
     font-size: 0.93rem;
     line-height: 1.75;
@@ -119,34 +119,41 @@
     resize: vertical;
     box-sizing: border-box;
     caret-color: #4F46E5;
-  
-    /* No syntax highlighting, clean plain text */
     white-space: pre-wrap;
     word-break: break-word;
     -webkit-overflow-scrolling: touch;
+    display: block;
   }
+  .textarea::placeholder { color: #CBD5E1; font-style: italic; }
   
-  .textarea::placeholder {
-    color: #CBD5E1;
-    font-style: italic;
-  }
-  
-  /* Mobile adjustments */
+  /* FIX 3 mobile — bigger touch target, 16px prevents iOS zoom */
   @media (max-width: 640px) {
     .textarea {
-      font-size: 16px; /* Prevents iOS zoom */
-      min-height: 250px;
-      padding: 14px 14px;
+      font-size: 16px;
+      min-height: 280px;
+      padding: 14px;
+      line-height: 1.7;
     }
   
     .toolbar {
-      padding: 6px 10px;
+      padding: 7px 10px;
       gap: 4px;
     }
   
     .headingBtn {
-      padding: 4px 5px;
-      font-size: 0.65rem;
+      padding: 5px 6px;
+      font-size: 0.68rem;
+    }
+  
+    .toolbarBtn {
+      /* width: 32px; */
+      height: 32px;
+    }
+  
+    .imageBtn,
+    .slashBtn {
+      height: 32px;
+      padding: 0 10px;
     }
   }
   
@@ -158,13 +165,13 @@
     padding: 6px 14px;
     background: #F8FAFC;
     border-top: 1px solid #E2E8F0;
+    border-radius: 0 0 10px 10px;
   }
   
   .footerHint {
     font-size: 0.72rem;
     color: #94A3B8;
   }
-  
   .footerHint kbd {
     background: #E2E8F0;
     border: 1px solid #CBD5E1;
@@ -180,16 +187,16 @@
     color: #94A3B8;
   }
   
-  /* ── Slash Command Picker ──────────────────────────────────── */
+  /* ── FIX 1: Slash picker — fixed viewport position ────────── */
   .slashPicker {
-    position: fixed;
+    position: fixed;   /* fixed so it always stays in viewport */
     z-index: 9999;
     background: #fff;
     border: 1px solid #E2E8F0;
     border-radius: 10px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
     width: 260px;
-    max-height: 320px;
+    max-height: 300px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -197,7 +204,7 @@
   }
   
   @keyframes slashIn {
-    from { opacity: 0; transform: translateY(-6px); }
+    from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0); }
   }
   
@@ -210,6 +217,16 @@
     color: #94A3B8;
     border-bottom: 1px solid #F1F5F9;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .slashQuery {
+    font-size: 0.65rem;
+    color: #4F46E5;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
   }
   
   .slashList {
@@ -240,51 +257,20 @@
     text-align: left;
     transition: background 0.1s;
   }
-  
   .slashItem:hover,
-  .slashActive {
-    background: #F1F5F9;
-  }
+  .slashActive { background: #F1F5F9; }
+  .slashActive  { background: #EEF2FF; }
   
-  .slashActive {
-    background: #EEF2FF;
-  }
+  .slashIcon  { font-size: 1rem; flex-shrink: 0; width: 22px; text-align: center; }
+  .slashLabel { font-size: 0.82rem; font-weight: 600; color: #1E293B; flex-shrink: 0; min-width: 80px; }
+  .slashDesc  { font-size: 0.72rem; color: #94A3B8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .slashEmpty { padding: 16px 12px; font-size: 0.82rem; color: #94A3B8; text-align: center; }
   
-  .slashIcon {
-    font-size: 1rem;
-    flex-shrink: 0;
-    width: 22px;
-    text-align: center;
-  }
-  
-  .slashLabel {
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #1E293B;
-    flex-shrink: 0;
-    min-width: 80px;
-  }
-  
-  .slashDesc {
-    font-size: 0.72rem;
-    color: #94A3B8;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .slashEmpty {
-    padding: 16px 12px;
-    font-size: 0.82rem;
-    color: #94A3B8;
-    text-align: center;
-  }
-  
-  /* ── Image Upload Modal ────────────────────────────────────── */
+  /* ── Image upload modal ────────────────────────────────────── */
   .modalOverlay {
     position: fixed;
     inset: 0;
-    background: rgba(15, 23, 42, 0.4);
+    background: rgba(15,23,42,0.4);
     backdrop-filter: blur(4px);
     z-index: 10000;
     display: flex;
@@ -293,22 +279,17 @@
     padding: 16px;
     animation: fadeIn 0.15s ease;
   }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   
   .modal {
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
     width: 100%;
     max-width: 440px;
     overflow: hidden;
     animation: modalIn 0.18s ease;
   }
-  
   @keyframes modalIn {
     from { opacity: 0; transform: scale(0.95) translateY(8px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
@@ -324,16 +305,10 @@
     font-size: 0.95rem;
     color: #1E293B;
   }
-  
   .modalClose {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #94A3B8;
-    font-size: 0.9rem;
-    padding: 4px;
-    border-radius: 4px;
-    transition: all 0.15s;
+    background: none; border: none; cursor: pointer;
+    color: #94A3B8; font-size: 0.9rem; padding: 4px;
+    border-radius: 4px; transition: all 0.15s;
   }
   .modalClose:hover { background: #F1F5F9; color: #1E293B; }
   
@@ -356,132 +331,181 @@
     justify-content: center;
     gap: 6px;
   }
-  
-  .dropzone:hover {
-    border-color: #4F46E5;
-    background: #F8FAFC;
-  }
-  
+  .dropzone:hover { border-color: #4F46E5; background: #F8FAFC; }
   .dropIcon { font-size: 2rem; }
-  
   .dropzone p { margin: 0; }
-  
-  .dropSub {
-    font-size: 0.75rem;
-    color: #94A3B8;
-  }
-  
-  .dropPreview {
-    max-width: 100%;
-    max-height: 160px;
-    border-radius: 6px;
-    object-fit: contain;
-  }
+  .dropSub { font-size: 0.75rem; color: #94A3B8; }
+  .dropPreview { max-width: 100%; max-height: 160px; border-radius: 6px; object-fit: contain; }
   
   .uploadOverlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.85);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 0.82rem;
-    color: #4F46E5;
-    font-weight: 600;
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.85);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; font-size: 0.82rem; color: #4F46E5; font-weight: 600;
   }
-  
   .spinner {
-    width: 24px;
-    height: 24px;
+    width: 24px; height: 24px;
     border: 2px solid #E0E7FF;
     border-top-color: #4F46E5;
     border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
   
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  .altWrap {
-    padding: 0 20px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .altLabel {
-    font-size: 0.78rem;
-    font-weight: 600;
-    color: #374151;
-  }
-  
+  .altWrap { padding: 0 20px 12px; display: flex; flex-direction: column; gap: 5px; }
+  .altLabel { font-size: 0.78rem; font-weight: 600; color: #374151; }
   .altInput {
-    padding: 8px 12px;
-    border: 1px solid #E2E8F0;
-    border-radius: 7px;
-    font-size: 0.875rem;
-    color: #1E293B;
-    font-family: inherit;
-    transition: border-color 0.2s;
-    outline: none;
+    padding: 8px 12px; border: 1px solid #E2E8F0; border-radius: 7px;
+    font-size: 0.875rem; color: #1E293B; font-family: inherit;
+    transition: border-color 0.2s; outline: none;
   }
-  
-  .altInput:focus {
-    border-color: #4F46E5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-  }
+  .altInput:focus { border-color: #4F46E5; box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
   
   .uploadError {
-    margin: 0 20px 12px;
-    padding: 8px 12px;
-    background: #FEF2F2;
-    border: 1px solid #FECACA;
-    border-radius: 7px;
-    color: #DC2626;
-    font-size: 0.8rem;
+    margin: 0 20px 12px; padding: 8px 12px;
+    background: #FEF2F2; border: 1px solid #FECACA;
+    border-radius: 7px; color: #DC2626; font-size: 0.8rem;
   }
   
   .modalFooter {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding: 14px 20px;
-    border-top: 1px solid #E2E8F0;
-    background: #F8FAFC;
+    display: flex; justify-content: flex-end; gap: 8px;
+    padding: 14px 20px; border-top: 1px solid #E2E8F0; background: #F8FAFC;
   }
   
-  /* ── Shared Buttons ────────────────────────────────────────── */
+  /* ── Shared buttons ────────────────────────────────────────── */
   .btnGhost {
-    padding: 8px 16px;
-    background: none;
-    color: #64748B;
-    border: 1px solid #E2E8F0;
-    border-radius: 7px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
+    padding: 8px 16px; background: none; color: #64748B;
+    border: 1px solid #E2E8F0; border-radius: 7px;
+    font-size: 0.82rem; font-weight: 500; cursor: pointer;
+    font-family: inherit; transition: all 0.15s;
   }
   .btnGhost:hover { background: #F1F5F9; }
   
   .btnPrimary {
-    padding: 8px 18px;
-    background: #4F46E5;
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
+    padding: 8px 18px; background: #4F46E5; color: #fff;
+    border: none; border-radius: 7px; font-size: 0.82rem;
+    font-weight: 600; cursor: pointer; font-family: inherit;
     transition: background 0.15s;
   }
-  .btnPrimary:hover { background: #4338CA; }
-  .btnPrimary:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  .btnPrimary:hover    { background: #4338CA; }
+  .btnPrimary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── List combo (icon btn + chevron, sits flush together) ─── */
+.listCombo {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  /* thin border wraps the whole combo as one unit */
+  border: 1px solid transparent;
+  border-radius: 6px;
+  transition: border-color 0.13s;
+}
+.listCombo:hover {
+  border-color: #E2E8F0;
+}
+
+/* The main icon button inside the combo — no individual border */
+.listCombo .toolbarBtn {
+  border-radius: 5px 0 0 5px;
+  border-right: 1px solid transparent;
+  transition: background 0.13s, border-color 0.13s;
+}
+.listCombo:hover .toolbarBtn {
+  border-right-color: #E2E8F0;
+}
+
+/* Tiny chevron button */
+.chevronBtn {
+  width: 14px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  color: #94A3B8;
+  padding: 0;
+  transition: background 0.13s, color 0.13s;
+  flex-shrink: 0;
+}
+.chevronBtn:hover {
+  background: #E2E8F0;
+  color: #475569;
+}
+
+@media (max-width: 640px) {
+  .chevronBtn { height: 32px; width: 16px; }
+}
+
+/* ── Style picker dropdown ────────────────────────────────── */
+.stylePicker {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  z-index: 600;
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  min-width: 160px;
+  overflow: hidden;
+  animation: slashIn 0.1s ease;
+}
+
+.stylePickerTitle {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  padding: 7px 10px 5px;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.styleOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+.styleOption:hover     { background: #F8FAFC; }
+.styleOptionActive     { background: #EEF2FF; }
+.styleOptionActive:hover { background: #E0E7FF; }
+
+/* Big symbol on the left */
+.stylePreview {
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  color: #4F46E5;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Option label */
+.styleLabel {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #374151;
+  flex: 1;
+}
+
+/* The actual MDX character shown on the right */
+.styleCode {
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94A3B8;
+  background: #F1F5F9;
+  padding: 1px 5px;
+  border-radius: 3px;
+}

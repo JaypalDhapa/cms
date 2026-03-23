@@ -23,19 +23,45 @@ const STEPS = [
 const slugify = (str) =>
   str.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
+// ── Session storage key ───────────────────────────────────────
+const DRAFT_KEY = "cms_tutorial_draft";
+
+const emptyForm = {
+  title: "", slug: "", description: "", author: "",
+  content: "",
+  category: "", lesson: "", status: "Published",
+  metaTitle: "", metaDesc: "", keywords: [], canonicalUrl: "",
+};
+
 // ── Main Component ────────────────────────────────────────────
 const TutorialForm = () => {
-  const [step, setStep] = useState(1);
-  const [form, setForm] = useState({
-    title: "", slug: "", description: "", author: "",
-    content: "",
-    category: "", lesson: "", status: "Published",
-    metaTitle: "", metaDesc: "", keywords: [], canonicalUrl: "",
+  // FIX 2: Initialise from sessionStorage so refresh doesn't wipe data
+  const [step, setStep] = useState(() => {
+    try { return parseInt(sessionStorage.getItem(DRAFT_KEY + "_step") || "1", 10); } catch { return 1; }
+  });
+  const [form, setForm] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem(DRAFT_KEY);
+      return saved ? { ...emptyForm, ...JSON.parse(saved) } : { ...emptyForm };
+    } catch { return { ...emptyForm }; }
   });
   const [errors, setErrors] = useState({});
-  const [keywords, setKeywords] = useState([]);
+  const [keywords, setKeywords] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem(DRAFT_KEY);
+      return saved ? (JSON.parse(saved).keywords || []) : [];
+    } catch { return []; }
+  });
   const [keywordInput, setKeywordInput] = useState("");
   const slugManual = useRef(false);
+
+  // FIX 2: Persist form + step to sessionStorage on every change
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(form));
+      sessionStorage.setItem(DRAFT_KEY + "_step", String(step));
+    } catch {}
+  }, [form, step]);
 
   // auto-slug from title
   useEffect(() => {
@@ -71,8 +97,10 @@ const TutorialForm = () => {
 
   const back = () => setStep((s) => Math.max(s - 1, 1));
 
+  // FIX 4: Allow jumping to any step freely — no data loss
   const goToStep = (n) => {
-    if (n < step) setStep(n); // only allow going back freely
+    if (step === 4) setForm((f) => ({ ...f, keywords })); // sync keywords before leaving step 4
+    setStep(n);
   };
 
   // ── Field helpers ──────────────────────────────────────────
@@ -92,15 +120,50 @@ const TutorialForm = () => {
 
 
   // ── Submit ─────────────────────────────────────────────────
-  const save = (status) => {
-    if (!form.title) { setStep(1); return; }
+const save = async (status) => {
+  if (!form.title) { setStep(1); return; }
+
+
+  //for full form
+  // const payload = {
+  //   ...form,
+  //   keywords,
+  //   status,
+  // };
+
+  const payload = {
+    title: form.title,
+    slug: form.slug,
+    content: form.content,
+  };
+
+  try {
+    const res = await fetch("http://localhost:5000/tutorial/api/createTutorial", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+
+    const data = await res.json();
+    console.log("Created:", data);
     alert(`Tutorial "${form.title}" saved as ${status}!`);
+
     // Reset
     setStep(1);
-    setForm({ title:"", slug:"", description:"", author:"", content:"", category:"", lesson:"", status:"Published", metaTitle:"", metaDesc:"", keywords:[], canonicalUrl:"" });
+    setForm({ ...emptyForm });
     setKeywords([]);
     slugManual.current = false;
-  };
+    try {
+      sessionStorage.removeItem(DRAFT_KEY);
+      sessionStorage.removeItem(DRAFT_KEY + "_step");
+    } catch {}
+  } catch (err) {
+    console.error(err);
+    alert("Failed to save tutorial. Check console for details.");
+  }
+};
 
   const progress = ((step - 1) / 4) * 100;
 

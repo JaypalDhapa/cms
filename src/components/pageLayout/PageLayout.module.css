@@ -16,16 +16,19 @@
   flex-direction: column;
   min-height: 100vh;
   transition: margin-left 0.3s ease;
+  /* FIX: use calc instead of width:0 which caused clipping */
   min-width: 0;
-  width: 0;
+  max-width: calc(100vw - 240px);
   overflow-x: hidden;
 }
 
 .expanded {
   margin-left: 60px;
+  max-width: calc(100vw - 60px);
 }
 
 .mobile {
   margin-left: 0;
   width: 100%;
+  max-width: 100vw;
 }

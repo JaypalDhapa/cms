@@ -2,17 +2,21 @@
 .wrapper {
   flex: 1;
   padding: 28px;
+  /* ensure it never overflows its container */
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 767px) {
-  .wrapper { padding: 20px 12px; }
+  .wrapper { padding: 16px 12px 32px; }
 }
 
 .pageHeader {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 .pageHeader h2 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #1E293B;
   margin-bottom: 4px;
@@ -25,13 +29,18 @@
 /* ── Layout ──────────────────────────────────────────────────── */
 .layout {
   display: grid;
-  grid-template-columns: 210px 1fr;
-  gap: 20px;
+  grid-template-columns: 200px 1fr;
+  gap: 18px;
   align-items: start;
+  /* prevent layout from overflowing */
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
-  .layout { grid-template-columns: 1fr; }
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
 }
 
 /* ── Step Sidebar ────────────────────────────────────────────── */
@@ -39,9 +48,52 @@
   background: #fff;
   border: 1px solid #E2E8F0;
   border-radius: 12px;
-  padding: 16px;
+  padding: 14px;
   position: sticky;
   top: 80px;
+}
+
+/* On mobile: turn steps into a compact horizontal stepper */
+@media (max-width: 768px) {
+  .stepSidebar {
+    position: static;
+    padding: 12px 14px;
+  }
+
+  .stepSidebarTitle {
+    display: none; /* hide "STEPS" label on mobile */
+  }
+
+  .stepList {
+    flex-direction: row !important;
+    gap: 0 !important;
+    justify-content: space-between;
+  }
+
+  .stepItem {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px !important;
+    padding: 6px 4px !important;
+    flex: 1;
+    border-radius: 8px;
+  }
+
+  .stepName {
+    font-size: 0.62rem !important;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .stepNum {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .progressBar {
+    display: none; /* hidden on mobile — stepper dots already show progress */
+  }
 }
 
 .stepSidebarTitle {
@@ -80,7 +132,6 @@
 
 .stepItem.completed {
   color: #10B981;
-  cursor: default;
 }
 
 .stepItem.completed .stepNum {
@@ -132,21 +183,27 @@
   background: #fff;
   border: 1px solid #E2E8F0;
   border-radius: 12px;
-  padding: 28px;
+  padding: 24px;
+  min-width: 0; /* critical: prevents card from overflowing grid */
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .formCard { padding: 16px 14px; }
 }
 
 /* ── Step Header ─────────────────────────────────────────────── */
 .stepHeader {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 .stepHeader h3 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #1E293B;
   margin-bottom: 4px;
 }
 .stepHeader p {
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   color: #64748B;
 }
 
@@ -154,7 +211,7 @@
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 14px;
 }
 
 .fullWidth { grid-column: 1 / -1; }
@@ -168,6 +225,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  min-width: 0;
 }
 
 /* ── Form Elements ───────────────────────────────────────────── */
@@ -191,6 +249,15 @@
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Prevent iOS zoom on focus */
+@media (max-width: 640px) {
+  .input,
+  .textarea,
+  .select { font-size: 16px; }
 }
 
 .input:focus,
@@ -224,25 +291,47 @@
 /* ── Slug ────────────────────────────────────────────────────── */
 .slugWrap {
   display: flex;
-  align-items: center;
-  gap: 0;
+  align-items: stretch;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
 }
 
 .slugPrefix {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   color: #64748B;
   background: #F8FAFC;
-  padding: 9px 10px;
-  border: 1px solid #E2E8F0;
-  border-right: none;
-  border-radius: 8px 0 0 8px;
+  padding: 9px 8px;
+  border-right: 1px solid #E2E8F0;
   white-space: nowrap;
-  height: 100%;
+  flex-shrink: 0;
+  /* truncate long domain on small screens */
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 400px) {
+  .slugPrefix { max-width: 80px; font-size: 0.65rem; padding: 9px 6px; }
 }
 
 .slugWrap .input {
-  border-radius: 0 8px 8px 0;
+  border: none;
+  border-radius: 0;
+  flex: 1;
+  min-width: 0;
+}
+.slugWrap .input:focus {
+  box-shadow: none;
+  outline: none;
+}
+.slugWrap:focus-within {
+  border-color: #4F46E5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
 /* ── Radio ───────────────────────────────────────────────────── */
@@ -259,108 +348,6 @@
   font-size: 0.875rem;
   cursor: pointer;
   color: #374151;
-}
-
-/* ── Rich Text Editor ────────────────────────────────────────── */
-.editorWrap {
-  border: 1px solid #E2E8F0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.toolbar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 12px;
-  background: #F8FAFC;
-  border-bottom: 1px solid #E2E8F0;
-  flex-wrap: wrap;
-}
-
-.toolbarBtn {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748B;
-  background: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-
-.toolbarBtn:hover { background: #E2E8F0; color: #1E293B; }
-
-.toolbarBtn svg {
-  width: 14px;
-  height: 14px;
-}
-
-.sep {
-  width: 1px;
-  height: 20px;
-  background: #E2E8F0;
-  margin: 0 4px;
-  flex-shrink: 0;
-}
-
-.editorContent {
-  min-height: 280px;
-  padding: 16px 20px;
-  outline: none;
-  font-size: 0.9rem;
-  line-height: 1.7;
-  color: #1E293B;
-  font-family: inherit;
-}
-
-.editorContent:empty::before {
-  content: attr(data-placeholder);
-  color: #94A3B8;
-  pointer-events: none;
-}
-
-.editorContent h2 { font-size: 1.3rem; font-weight: 700; margin: 14px 0 7px; }
-.editorContent h3 { font-size: 1.1rem; font-weight: 700; margin: 12px 0 6px; }
-.editorContent p { margin-bottom: 10px; }
-.editorContent ul,
-.editorContent ol { margin: 8px 0 8px 22px; }
-.editorContent li { margin-bottom: 4px; }
-.editorContent pre {
-  background: #1E293B;
-  color: #E2E8F0;
-  padding: 14px 16px;
-  border-radius: 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.82rem;
-  overflow-x: auto;
-  margin: 12px 0;
-}
-.editorContent a { color: #4F46E5; text-decoration: underline; }
-.editorContent blockquote {
-  border-left: 3px solid #4F46E5;
-  padding-left: 14px;
-  color: #64748B;
-  font-style: italic;
-  margin: 10px 0;
-}
-
-.editorFooter {
-  padding: 8px 14px;
-  background: #F8FAFC;
-  border-top: 1px solid #E2E8F0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.wordCount {
-  font-size: 0.72rem;
-  color: #94A3B8;
 }
 
 /* ── SEO ─────────────────────────────────────────────────────── */
@@ -411,8 +398,9 @@
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
   border-radius: 10px;
-  padding: 16px;
-  margin-top: 20px;
+  padding: 14px;
+  margin-top: 18px;
+  word-break: break-word;
 }
 
 .seoLabel {
@@ -421,12 +409,12 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: #94A3B8;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
-.seoUrl { font-size: 0.78rem; color: #188038; margin-bottom: 3px; }
-.seoTitle { font-size: 1rem; color: #1A0DAB; font-weight: 500; margin-bottom: 3px; }
-.seoDesc { font-size: 0.82rem; color: #64748B; line-height: 1.5; }
+.seoUrl   { font-size: 0.78rem; color: #188038; margin-bottom: 3px; word-break: break-all; }
+.seoTitle { font-size: 0.95rem; color: #1A0DAB; font-weight: 500; margin-bottom: 3px; }
+.seoDesc  { font-size: 0.8rem; color: #64748B; line-height: 1.5; }
 
 /* ── Preview (Step 5) ────────────────────────────────────────── */
 .previewCard {
@@ -439,21 +427,22 @@
 
 .previewThumb {
   width: 100%;
-  height: 180px;
+  height: 140px;
   background: linear-gradient(135deg, #EEF2FF, #EDE9FE);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
-.previewBody { padding: 22px; }
+.previewBody { padding: 18px; }
 
 .previewMeta {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .previewCategory {
@@ -465,16 +454,14 @@
   border-radius: 99px;
 }
 
-.previewLesson {
-  font-size: 0.75rem;
-  color: #94A3B8;
-}
+.previewLesson { font-size: 0.75rem; color: #94A3B8; }
 
 .previewTitle {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1E293B;
   margin-bottom: 6px;
+  word-break: break-word;
 }
 
 .previewDesc {
@@ -485,13 +472,14 @@
 
 .previewContent {
   border-top: 1px solid #E2E8F0;
-  padding-top: 16px;
-  margin-top: 16px;
+  padding-top: 14px;
+  margin-top: 14px;
   font-size: 0.875rem;
   line-height: 1.7;
   color: #64748B;
-  max-height: 300px;
+  max-height: 260px;
   overflow-y: auto;
+  word-break: break-word;
 }
 
 /* ── Step Actions ────────────────────────────────────────────── */
@@ -499,14 +487,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 24px;
+  margin-top: 22px;
   padding-top: 16px;
   border-top: 1px solid #E2E8F0;
+  gap: 10px;
+}
+
+@media (max-width: 400px) {
+  .stepActions { flex-wrap: wrap; }
+  .stepActions > * { flex: 1; }
 }
 
 .actionsRight {
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 /* ── Buttons ─────────────────────────────────────────────────── */
@@ -521,6 +516,7 @@
   cursor: pointer;
   transition: background 0.2s;
   font-family: inherit;
+  white-space: nowrap;
 }
 .btnPrimary:hover { background: #4338CA; }
 
@@ -535,11 +531,12 @@
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
+  white-space: nowrap;
 }
 .btnGhost:hover { background: #F8FAFC; color: #1E293B; }
 
 .btnSecondary {
-  padding: 9px 16px;
+  padding: 9px 14px;
   background: #F1F5F9;
   color: #475569;
   border: 1px solid #E2E8F0;
@@ -552,11 +549,12 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 .btnSecondary:hover { background: #E2E8F0; }
 
 .btnSuccess {
-  padding: 9px 18px;
+  padding: 9px 16px;
   background: #10B981;
   color: #fff;
   border: none;
@@ -569,5 +567,6 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
 }
 .btnSuccess:hover { background: #059669; }
