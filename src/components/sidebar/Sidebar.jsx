@@ -6,13 +6,12 @@ import SidebarToggle from "../SidebarToggle/SidebarToggle";
 const Sidebar = ({ isOpen, setOpen, isMobile }) => {
   const location = useLocation();
   const handleNavClick = () => { if (isMobile) setOpen(false); };
-
   const isActive = (path) => location.pathname === path;
 
   return (
     <>
       <aside
-        className={`${Styles.sidebar} 
+        className={`${Styles.sidebar}
         ${!isMobile && isOpen ? Styles.collapsed : ""}
         ${isMobile && isOpen ? Styles.mobileOpen : ""}
         ${isMobile && !isOpen ? Styles.mobileClosed : ""}
@@ -46,9 +45,9 @@ const Sidebar = ({ isOpen, setOpen, isMobile }) => {
               <Pencil />
               <span>Edit Tutorial</span>
             </Link>
-            <Link to="/" className={Styles.nav_item} onClick={handleNavClick}>
+            <Link to="/tutorial/delete" className={`${Styles.nav_item} ${isActive("/tutorial/delete") ? Styles.nav_item_active : ""}`} onClick={handleNavClick}>
               <Trash2 />
-              <span>Delete</span>
+              <span>Delete Tutorial</span>
             </Link>
             <Link to="/" className={Styles.nav_item} onClick={handleNavClick}>
               <LayoutDashboard />
