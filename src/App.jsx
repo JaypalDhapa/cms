@@ -5,6 +5,7 @@ import CreateTutorial from "./pages/CreateTutorial";
 import EditTutorialPage from "./pages/EditTutorial";
 import EditTutorialForm from "./pages/EditTutorialForm";
 import DeleteTutorialPage from "./pages/DeleteTutorial";
+import CategoriesPage from "./pages/Categories";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path="/tutorial/edit-form" element={<EditTutorialForm />} />
       <Route path="/tutorial/delete" element={<DeleteTutorialPage />} />
       <Route path="/tutorials" element={<TutorialsPage />} />
+      <Route path="/categories" element={<CategoriesPage />} />
     </Routes>
   );
 };
