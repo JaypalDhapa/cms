@@ -1,17 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import Styles from "./TutorialForm.module.css";
 import MdxEditor from "../mdxEditor/MdxEditor";
+import { CATEGORIES } from "../../data/tutorialData";
 
-// ── Data ──────────────────────────────────────────────────────
-const CATEGORIES = {
-  JavaScript: ["Introduction", "Variables", "Functions", "Async/Await", "DOM"],
-  React: ["Getting Started", "Hooks", "State Management", "Routing", "Performance"],
-  CSS: ["Basics", "Flexbox", "Grid", "Animations", "Responsive"],
-  "Node.js": ["Setup", "Express", "REST APIs", "Auth", "Databases"],
-  TypeScript: ["Basics", "Types", "Generics", "Decorators", "Advanced"],
-};
-
-const STEPS = [
+// ── Steps ─────────────────────────────────────────────────────
+const ALL_STEPS = [
   { id: 1, name: "Meta Data" },
   { id: 2, name: "Content" },
   { id: 3, name: "Category" },
@@ -19,11 +12,13 @@ const STEPS = [
   { id: 5, name: "Publish" },
 ];
 
+// Steps visible to editors (no Publish step)
+const EDITOR_STEPS = ALL_STEPS.filter((s) => s.id < 5);
+
 // ── Helpers ───────────────────────────────────────────────────
 const slugify = (str) =>
   str.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-// ── Session storage key ───────────────────────────────────────
 const DRAFT_KEY = "cms_tutorial_draft";
 
 const emptyForm = {
@@ -34,36 +29,48 @@ const emptyForm = {
 };
 
 // ── Main Component ────────────────────────────────────────────
-const TutorialForm = () => {
-  // FIX 2: Initialise from sessionStorage so refresh doesn't wipe data
+// Props:
+//   initialData  – tutorial object to prefill (edit mode)
+//   isEditing    – boolean, true = edit mode
+//   isEditor     – boolean, true = role is editor (hides Publish, shows only Save)
+const TutorialForm = ({ initialData = null, isEditing = false, isEditor = false }) => {
+  const STEPS = isEditor ? EDITOR_STEPS : ALL_STEPS;
+  const maxStep = STEPS[STEPS.length - 1].id;
+
   const [step, setStep] = useState(() => {
+    if (isEditing) return 1; // always start at step 1 when editing
     try { return parseInt(sessionStorage.getItem(DRAFT_KEY + "_step") || "1", 10); } catch { return 1; }
   });
+
   const [form, setForm] = useState(() => {
+    if (isEditing && initialData) return { ...emptyForm, ...initialData };
     try {
       const saved = sessionStorage.getItem(DRAFT_KEY);
       return saved ? { ...emptyForm, ...JSON.parse(saved) } : { ...emptyForm };
     } catch { return { ...emptyForm }; }
   });
+
   const [errors, setErrors] = useState({});
   const [keywords, setKeywords] = useState(() => {
+    if (isEditing && initialData) return initialData.keywords || [];
     try {
       const saved = sessionStorage.getItem(DRAFT_KEY);
       return saved ? (JSON.parse(saved).keywords || []) : [];
     } catch { return []; }
   });
   const [keywordInput, setKeywordInput] = useState("");
-  const slugManual = useRef(false);
+  const slugManual = useRef(isEditing); // in edit mode, don't auto-overwrite slug
 
-  // FIX 2: Persist form + step to sessionStorage on every change
+  // Persist to sessionStorage only in create mode
   useEffect(() => {
+    if (isEditing) return;
     try {
       sessionStorage.setItem(DRAFT_KEY, JSON.stringify(form));
       sessionStorage.setItem(DRAFT_KEY + "_step", String(step));
     } catch {}
-  }, [form, step]);
+  }, [form, step, isEditing]);
 
-  // auto-slug from title
+  // Auto-slug from title (create mode only)
   useEffect(() => {
     if (!slugManual.current) {
       setForm((f) => ({ ...f, slug: slugify(f.title) }));
@@ -92,18 +99,16 @@ const TutorialForm = () => {
   const next = () => {
     if (!validate(step)) return;
     if (step === 4) setForm((f) => ({ ...f, keywords }));
-    setStep((s) => Math.min(s + 1, 5));
+    setStep((s) => Math.min(s + 1, maxStep));
   };
 
   const back = () => setStep((s) => Math.max(s - 1, 1));
 
-  // FIX 4: Allow jumping to any step freely — no data loss
   const goToStep = (n) => {
-    if (step === 4) setForm((f) => ({ ...f, keywords })); // sync keywords before leaving step 4
+    if (step === 4) setForm((f) => ({ ...f, keywords }));
     setStep(n);
   };
 
-  // ── Field helpers ──────────────────────────────────────────
   const field = (key) => ({
     value: form[key],
     onChange: (e) => setForm((f) => ({ ...f, [key]: e.target.value })),
@@ -117,61 +122,62 @@ const TutorialForm = () => {
 
   const removeKeyword = (kw) => setKeywords((k) => k.filter((x) => x !== kw));
 
-
-
   // ── Submit ─────────────────────────────────────────────────
-const save = async (status) => {
-  if (!form.title) { setStep(1); return; }
+  const save = async (status) => {
+    if (!form.title) { setStep(1); return; }
 
+    const payload = {
+      ...form,
+      keywords,
+      status,
+      ...(initialData?.id ? { id: initialData.id } : {}),
+    };
 
-  //for full form
-  // const payload = {
-  //   ...form,
-  //   keywords,
-  //   status,
-  // };
+    const endpoint = isEditing
+      ? `http://localhost:5000/tutorial/api/updateTutorial/${initialData.id}`
+      : "http://localhost:5000/tutorial/api/createTutorial";
+    const method = isEditing ? "PUT" : "POST";
 
-  const payload = {
-    title: form.title,
-    slug: form.slug,
-    content: form.content,
+    try {
+      const res = await fetch(endpoint, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      const data = await res.json();
+      console.log(isEditing ? "Updated:" : "Created:", data);
+      alert(`Tutorial "${form.title}" saved as ${status}!`);
+
+      if (!isEditing) {
+        setStep(1);
+        setForm({ ...emptyForm });
+        setKeywords([]);
+        slugManual.current = false;
+        try {
+          sessionStorage.removeItem(DRAFT_KEY);
+          sessionStorage.removeItem(DRAFT_KEY + "_step");
+        } catch {}
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save tutorial. Check console for details.");
+    }
   };
 
-  try {
-    const res = await fetch("http://localhost:5000/tutorial/api/createTutorial", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-
-    const data = await res.json();
-    console.log("Created:", data);
-    alert(`Tutorial "${form.title}" saved as ${status}!`);
-
-    // Reset
-    setStep(1);
-    setForm({ ...emptyForm });
-    setKeywords([]);
-    slugManual.current = false;
-    try {
-      sessionStorage.removeItem(DRAFT_KEY);
-      sessionStorage.removeItem(DRAFT_KEY + "_step");
-    } catch {}
-  } catch (err) {
-    console.error(err);
-    alert("Failed to save tutorial. Check console for details.");
-  }
-};
-
-  const progress = ((step - 1) / 4) * 100;
+  const progress = ((step - 1) / (maxStep - 1)) * 100;
 
   return (
     <div className={Styles.wrapper}>
       <div className={Styles.pageHeader}>
-        <h2>Add New Tutorial</h2>
-        <p>Fill in the details to create a new tutorial.</p>
+        <h2>{isEditing ? `Editing: ${form.title || "Tutorial"}` : "Add New Tutorial"}</h2>
+        <p>
+          {isEditing
+            ? isEditor
+              ? "You can edit content and save — publish actions are managed by an admin."
+              : "Update the details below and publish when ready."
+            : "Fill in the details to create a new tutorial."}
+        </p>
       </div>
 
       <div className={Styles.layout}>
@@ -200,6 +206,14 @@ const save = async (status) => {
           <div className={Styles.progressBar}>
             <div className={Styles.progressFill} style={{ width: `${progress}%` }} />
           </div>
+
+          {/* Editor badge */}
+          {isEditor && (
+            <div className={Styles.editorBadge}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Editor Mode
+            </div>
+          )}
         </div>
 
         {/* ── Step Forms ── */}
@@ -242,7 +256,7 @@ const save = async (status) => {
                   {errors.author && <span className={Styles.error}>{errors.author}</span>}
                 </div>
               </div>
-              <StepActions step={1} onNext={next} />
+              <StepActions step={1} maxStep={maxStep} onNext={next} />
             </div>
           )}
 
@@ -259,7 +273,7 @@ const save = async (status) => {
                 placeholder="Start writing your tutorial in MDX…"
               />
               {errors.content && <span className={Styles.error} style={{ marginTop: 6, display: "block" }}>{errors.content}</span>}
-              <StepActions step={2} onBack={back} onNext={next} />
+              <StepActions step={2} maxStep={maxStep} onBack={back} onNext={next} />
             </div>
           )}
 
@@ -308,7 +322,7 @@ const save = async (status) => {
                   </div>
                 </div>
               </div>
-              <StepActions step={3} onBack={back} onNext={next} />
+              <StepActions step={3} maxStep={maxStep} onBack={back} onNext={next} />
             </div>
           )}
 
@@ -354,23 +368,38 @@ const save = async (status) => {
                   <input className={Styles.input} placeholder="https://yoursite.com/tutorials/slug" {...field("canonicalUrl")} />
                 </div>
               </div>
-              {/* SEO Preview */}
               <div className={Styles.seoPreview}>
                 <div className={Styles.seoLabel}>Search Preview</div>
                 <div className={Styles.seoUrl}>tutorialsite.com › tutorials › {form.slug || "your-slug"}</div>
                 <div className={Styles.seoTitle}>{form.metaTitle || form.title || "Your Tutorial Title"} — TutorialCMS</div>
                 <div className={Styles.seoDesc}>{form.metaDesc || form.description || "Your meta description will appear here."}</div>
               </div>
-              <StepActions step={4} onBack={back} onNext={next} />
+
+              {/* Editor mode: show save actions directly on step 4 instead of going to step 5 */}
+              {isEditor ? (
+                <div className={Styles.stepActions}>
+                  <button className={Styles.btnGhost} onClick={back}>← Back</button>
+                  <div className={Styles.actionsRight}>
+                    <button className={Styles.btnSecondary} onClick={() => save("Draft")}>
+                      <SaveIcon /> Save as Draft
+                    </button>
+                    <button className={Styles.btnPrimary} onClick={() => save(form.status || "Draft")}>
+                      <SaveIcon /> Save Changes
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <StepActions step={4} maxStep={maxStep} onBack={back} onNext={next} />
+              )}
             </div>
           )}
 
-          {/* Step 5 — Preview & Publish */}
-          {step === 5 && (
+          {/* Step 5 — Preview & Publish (admin only) */}
+          {step === 5 && !isEditor && (
             <div>
               <div className={Styles.stepHeader}>
-                <h3>Preview & Publish</h3>
-                <p>Review your tutorial before publishing.</p>
+                <h3>Preview & {isEditing ? "Update" : "Publish"}</h3>
+                <p>Review your tutorial before {isEditing ? "updating" : "publishing"}.</p>
               </div>
               <div className={Styles.previewCard}>
                 <div className={Styles.previewThumb}>📖</div>
@@ -392,9 +421,15 @@ const save = async (status) => {
                   <button className={Styles.btnSecondary} onClick={() => save("Draft")}>
                     <SaveIcon /> Save Draft
                   </button>
-                  <button className={Styles.btnSuccess} onClick={() => save("Published")}>
-                    <CheckIcon /> Publish Tutorial
-                  </button>
+                  {isEditing ? (
+                    <button className={Styles.btnSuccess} onClick={() => save(form.status || "Published")}>
+                      <CheckIcon /> Update Tutorial
+                    </button>
+                  ) : (
+                    <button className={Styles.btnSuccess} onClick={() => save("Published")}>
+                      <CheckIcon /> Publish Tutorial
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -407,12 +442,12 @@ const save = async (status) => {
 };
 
 // ── Step Actions Bar ───────────────────────────────────────────
-const StepActions = ({ step, onBack, onNext }) => (
+const StepActions = ({ step, maxStep, onBack, onNext }) => (
   <div className={Styles.stepActions}>
     <button className={Styles.btnGhost} onClick={onBack} style={{ visibility: step === 1 ? "hidden" : "visible" }}>
       ← Back
     </button>
-    {step < 5 && (
+    {step < maxStep && (
       <button className={Styles.btnPrimary} onClick={onNext}>
         Continue →
       </button>
@@ -420,8 +455,6 @@ const StepActions = ({ step, onBack, onNext }) => (
   </div>
 );
 
-
-// ── SVG Icons ──────────────────────────────────────────────────
 const SaveIcon = () => <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M13 9v4H3V9M8 1v8M5 6l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 const CheckIcon = () => <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 8l4.5 4.5L14 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 
