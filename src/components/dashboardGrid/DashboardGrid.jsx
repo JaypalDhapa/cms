@@ -1,4 +1,5 @@
 import Styles from './DashboardGrid.module.css';
+import { Link } from 'react-router-dom';
 
 const DashboardGrid = () => {
   const rows = [
@@ -22,7 +23,7 @@ const DashboardGrid = () => {
       <div className={Styles.recent_table_card}>
         <div className={Styles.card_header}>
           <span className={Styles.card_title}>Recent Tutorials</span>
-          <button className={Styles.view_all_btn}>View all</button>
+          <Link to="/tutorials" className={Styles.view_all_btn}>View all</Link>
         </div>
 
         {/* table_wrap handles horizontal scroll on mobile */}

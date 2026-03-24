@@ -1,10 +1,12 @@
+import { Link } from "react-router-dom";
 import Styles from "./QuickActions.module.css";
 import { Plus,BookAudio } from "lucide-react";
 
-function QuickAcitonBtn({ title, icon }) {
+function QuickAcitonBtn({ title, icon,to }) {
   const Icon = icon.component;
   return (
-    <div className={Styles.quickBtn}>
+    
+    <Link to={to} className={Styles.quickBtn}>
       <div
         className={Styles.quickBtn_icon}
         style={{
@@ -15,7 +17,7 @@ function QuickAcitonBtn({ title, icon }) {
         {Icon && <Icon size={20} color={icon.color} />}
       </div>
         <p className={Styles.title}>{title}</p>
-    </div>
+    </Link>
   );
 }
 
@@ -25,6 +27,7 @@ const QuickActions = () => {
       <h3 style={{marginBottom:"24px", color:"#daddd8"}}>Quck Action</h3>
     <div className={Styles.quick_actions}>
       <QuickAcitonBtn
+        to="/tutorial"
         title="Add tutorial"
         icon={{
           component: Plus,
@@ -33,6 +36,7 @@ const QuickActions = () => {
         }}
       />
        <QuickAcitonBtn
+        to="/tutorials"
         title="View all"
         icon={{
           component: BookAudio,
@@ -41,6 +45,7 @@ const QuickActions = () => {
         }}
       />
        <QuickAcitonBtn
+        to="/categories"
         title="Categories"
         icon={{
           component: Plus,

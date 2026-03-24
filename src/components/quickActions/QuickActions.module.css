@@ -22,6 +22,8 @@
   border: 1px solid #F1F5F9;
   min-width: 0;
   text-align: center;
+  text-decoration: none;
+  color: inherit;
 }
 
 .quickBtn:hover {

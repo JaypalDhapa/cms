@@ -1,7 +1,151 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Styles from "./TutorialForm.module.css";
 import MdxEditor from "../mdxEditor/MdxEditor";
 import { CATEGORIES } from "../../data/tutorialData";
+
+// ── Searchable Dropdown ────────────────────────────────────────
+const SearchableDropdown = ({
+  options = [],
+  value = "",
+  onChange,
+  placeholder = "Select…",
+  searchPlaceholder = "Search…",
+  disabled = false,
+  hasError = false,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const containerRef = useRef(null);
+  const searchRef = useRef(null);
+  const listRef = useRef(null);
+  const [highlighted, setHighlighted] = useState(0);
+
+  const filtered = options.filter((o) =>
+    o.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+        setQuery("");
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Focus search input when opened
+  useEffect(() => {
+    if (open && searchRef.current) {
+      searchRef.current.focus();
+      setHighlighted(0);
+    }
+  }, [open]);
+
+  // Scroll highlighted item into view
+  useEffect(() => {
+    if (!listRef.current) return;
+    const item = listRef.current.children[highlighted];
+    if (item) item.scrollIntoView({ block: "nearest" });
+  }, [highlighted]);
+
+  const select = (opt) => {
+    onChange(opt);
+    setOpen(false);
+    setQuery("");
+  };
+
+  const handleKeyDown = (e) => {
+    if (!open) { if (e.key === "Enter" || e.key === " ") setOpen(true); return; }
+    if (e.key === "ArrowDown") { e.preventDefault(); setHighlighted((h) => Math.min(h + 1, filtered.length - 1)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setHighlighted((h) => Math.max(h - 1, 0)); }
+    else if (e.key === "Enter") { e.preventDefault(); if (filtered[highlighted]) select(filtered[highlighted]); }
+    else if (e.key === "Escape") { setOpen(false); setQuery(""); }
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className={`${Styles.sdRoot} ${disabled ? Styles.sdDisabled : ""} ${hasError ? Styles.sdError : ""}`}
+      onKeyDown={handleKeyDown}
+    >
+      {/* Trigger button */}
+      <button
+        type="button"
+        className={Styles.sdTrigger}
+        onClick={() => { if (!disabled) setOpen((o) => !o); }}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        disabled={disabled}
+      >
+        <span className={value ? Styles.sdValue : Styles.sdPlaceholder}>
+          {value || placeholder}
+        </span>
+        <svg
+          className={`${Styles.sdChevron} ${open ? Styles.sdChevronOpen : ""}`}
+          width="14" height="14" viewBox="0 0 14 14" fill="none"
+        >
+          <path d="M2 5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+
+      {/* Dropdown panel */}
+      {open && (
+        <div className={Styles.sdPanel}>
+          {/* Search box */}
+          <div className={Styles.sdSearchWrap}>
+            <svg className={Styles.sdSearchIcon} width="13" height="13" viewBox="0 0 13 13" fill="none">
+              <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" strokeWidth="1.3"/>
+              <path d="M9.5 9.5l2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
+            <input
+              ref={searchRef}
+              type="text"
+              className={Styles.sdSearchInput}
+              placeholder={searchPlaceholder}
+              value={query}
+              onChange={(e) => { setQuery(e.target.value); setHighlighted(0); }}
+            />
+            {query && (
+              <button className={Styles.sdClear} onClick={() => { setQuery(""); searchRef.current?.focus(); }}>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* Options list */}
+          <ul ref={listRef} className={Styles.sdList} role="listbox">
+            {filtered.length > 0 ? (
+              filtered.map((opt, i) => (
+                <li
+                  key={opt}
+                  role="option"
+                  aria-selected={opt === value}
+                  className={`${Styles.sdOption} ${opt === value ? Styles.sdSelected : ""} ${i === highlighted ? Styles.sdHighlighted : ""}`}
+                  onMouseEnter={() => setHighlighted(i)}
+                  onClick={() => select(opt)}
+                >
+                  <span>{opt}</span>
+                  {opt === value && (
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                      <path d="M2 6.5l3.5 3.5L11 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                </li>
+              ))
+            ) : (
+              <li className={Styles.sdEmpty}>No results for "{query}"</li>
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ── Steps ─────────────────────────────────────────────────────
 const ALL_STEPS = [
@@ -287,27 +431,27 @@ const TutorialForm = ({ initialData = null, isEditing = false, isEditor = false 
               <div className={Styles.formGrid}>
                 <div className={Styles.formGroup}>
                   <label className={Styles.label}>Category <span className={Styles.req}>*</span></label>
-                  <select
-                    className={`${Styles.select} ${errors.category ? Styles.inputError : ""}`}
+                  <SearchableDropdown
+                    options={Object.keys(CATEGORIES)}
                     value={form.category}
-                    onChange={(e) => setForm((f) => ({ ...f, category: e.target.value, lesson: "" }))}
-                  >
-                    <option value="">Select Category</option>
-                    {Object.keys(CATEGORIES).map((c) => <option key={c} value={c}>{c}</option>)}
-                  </select>
+                    onChange={(val) => setForm((f) => ({ ...f, category: val, lesson: "" }))}
+                    placeholder="Select Category"
+                    searchPlaceholder="Search categories…"
+                    hasError={!!errors.category}
+                  />
                   {errors.category && <span className={Styles.error}>{errors.category}</span>}
                 </div>
                 <div className={Styles.formGroup}>
                   <label className={Styles.label}>Lesson <span className={Styles.req}>*</span></label>
-                  <select
-                    className={`${Styles.select} ${errors.lesson ? Styles.inputError : ""}`}
+                  <SearchableDropdown
+                    options={CATEGORIES[form.category] || []}
                     value={form.lesson}
-                    onChange={(e) => setForm((f) => ({ ...f, lesson: e.target.value }))}
+                    onChange={(val) => setForm((f) => ({ ...f, lesson: val }))}
+                    placeholder={form.category ? "Select Lesson" : "Select Category first"}
+                    searchPlaceholder="Search lessons…"
                     disabled={!form.category}
-                  >
-                    <option value="">{form.category ? "Select Lesson" : "Select Category first"}</option>
-                    {(CATEGORIES[form.category] || []).map((l) => <option key={l} value={l}>{l}</option>)}
-                  </select>
+                    hasError={!!errors.lesson}
+                  />
                   {errors.lesson && <span className={Styles.error}>{errors.lesson}</span>}
                 </div>
                 <div className={`${Styles.formGroup} ${Styles.fullWidth}`}>

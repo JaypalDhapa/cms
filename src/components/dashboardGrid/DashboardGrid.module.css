@@ -54,18 +54,19 @@
   .view_all_btn {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #6366F1;
-    background: #EEF2FF;
+    color: #475569;
+    background: transparent;
     border: none;
     border-radius: 6px;
     padding: 5px 12px;
     cursor: pointer;
+    text-decoration: none;
     transition: background 0.15s, color 0.15s;
   }
   
   .view_all_btn:hover {
-    background: #6366F1;
-    color: #fff;
+    background: #F1F5F9;
+    /* color: #fff; */
   }
   
   /* ── Table Scroll Wrapper ───────────────────── */
