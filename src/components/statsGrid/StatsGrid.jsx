@@ -29,8 +29,8 @@ const StatsGrid = () => {
      title="tutorial"
      icon={{
       component:ClipboardList, 
-      bg:"rgba(166, 211, 232, 0.27)",
-      iconColor:'rgb(95, 111, 255)'
+      bg:" var(--color-bg-icon1)",
+      iconColor:'rgb(255, 255, 255)'
     }}
       />
 
@@ -39,8 +39,8 @@ const StatsGrid = () => {
      title="Published"
      icon={{
       component:BookCheck, 
-      bg:"rgba(46, 255, 19, 0.2)",
-      iconColor:'rgb(1, 157, 98)'
+      bg:" var(--color-bg-icon2)",
+      iconColor:'rgb(250, 250, 250)'
     }}
       />
 
@@ -59,8 +59,8 @@ const StatsGrid = () => {
      title="Categories"
      icon={{
       component:ClipboardList, 
-      bg:"rgba(166, 211, 232, 0.27)",
-      iconColor:'rgb(95, 111, 255)'
+      bg:" var(--color-bg-icon4)",
+      iconColor:'rgb(255, 255, 255)'
     }}
       />
     </div>

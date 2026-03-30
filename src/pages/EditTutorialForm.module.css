@@ -1,0 +1,20 @@
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #64748b;
+}
+
+.empty button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.empty button:hover {
+  background: #4338ca;
+}

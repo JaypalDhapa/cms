@@ -4,10 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom';
 
+import { ApolloProvider } from '@apollo/client/react';
+import client from './apollo/client.js';
+
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  
+  <ApolloProvider client={client}>
   <BrowserRouter>
     <App />
-  </BrowserRouter>,
-  </StrictMode>
+  </BrowserRouter>
+  </ApolloProvider>
 )

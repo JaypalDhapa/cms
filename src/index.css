@@ -1,3 +1,76 @@
+/* ── CSS Variables (light default) ──────────────────── */
+:root
+ {
+  --color-bg-primary:#f3f3f3;
+  --color-bg-surface:#fff;
+  --color-bg-onsurface:#f8fafc;
+  --color-text-onsurface:#000;
+  --color-border-primary:#444;
+  --color-border-surface:#E2E8F7;
+  --nav-item-active-bg:#6366f11a;
+  --nav-item-active-color:#4F46E5;
+  --color-bg-secondryonsurface:#fff;
+  --color-bg-icon1:#3638bbb8;
+  --color-bg-icon2:#06b365;
+  --color-bg-icon3:#3638bbb8;
+  --color-bg-icon4:#127f94;
+
+
+
+
+  --topbar-border: #e5e7eb;
+  --title-color: #111827;
+  --icon-btn-bg: transparent;
+  --icon-btn-hover-bg: #f3f4f6;
+  --icon-btn-active-bg: #e5e7eb;
+  --icon-btn-color: #374151;
+  --dropdown-bg: #ffffff;
+  --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --dropdown-border: #e5e7eb;
+  --option-hover-bg: #f9fafb;
+  --option-active-color: #4F46E5;
+  --option-active-bg: #eef2ff;
+  --option-text: #374151;
+  --check-color: #4F46E5;
+}
+
+[data-theme="dark"] {
+  --color-bg-primary:#121212;
+  --color-bg-surface:#31363f;
+  --color-bg-onsurface:#31363f;
+  --color-bg-surface:#252525;
+  --color-text-onsurface:#fff;
+  --color-border-surface:#656565;
+  --nav-item-active-bg:#00d6ff82;
+  --color-bg-secondryonsurface:#00d5ff3f;
+  --nav-item-active-color:#ffffff;
+  --color-bg-icon1:#3638bbb8;
+  --color-bg-icon2:#3638bbb8;
+  --color-bg-icon4:#3638bbb8;
+  --color-bg-icon5:#3638bbb8;
+
+
+
+
+
+
+
+  --topbar-bg: #1f2937;
+  --topbar-border: #374151;
+  --title-color: #f9fafb;
+  --icon-btn-bg: transparent;
+  --icon-btn-hover-bg: #374151;
+  --icon-btn-active-bg: #4b5563;
+  --icon-btn-color: #d1d5db;
+  --dropdown-bg: #1f2937;
+  --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --dropdown-border: #374151;
+  --option-hover-bg: #374151;
+  --option-active-color: #818cf8;
+  --option-active-bg: #312e81;
+  --option-text: #d1d5db;
+  --check-color: #818cf8;
+}
 * {
   margin: 0;
   padding: 0;
@@ -5,7 +78,9 @@
 }
 
 body {
-  background: #F8F9FC;
+  background: var(--color-bg-primary);
+  /* background: #f3f3f3; */
+  /* background: #E4E4E4; */
   min-height: 100vh;
   /* font-family: 'Noto Serif', serif; */
 }

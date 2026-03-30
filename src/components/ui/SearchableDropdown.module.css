@@ -1,0 +1,173 @@
+/* src/components/ui/SearchableDropdown.module.css */
+
+.root {
+  position: relative;
+  width: 100%;
+  font-size: 0.875rem;
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.error .trigger {
+  border-color: #ef4444;
+}
+
+/* ── Trigger button ── */
+.trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: #1E293B;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.trigger:hover {
+  border-color: #cbd5e1;
+}
+
+.placeholder {
+  color: #94a3b8;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.value {
+  color: #1e293b;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chevron {
+  color: #94a3b8;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── Dropdown panel ── */
+.panel {
+  position: absolute;
+  z-index: 200;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  animation: sdFadeIn 0.12s ease;
+}
+
+/* ── Search inside panel ── */
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  background: #fafafa;
+}
+
+.searchIcon {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.82rem;
+  color: #1e293b;
+  outline: none;
+  min-width: 0;
+}
+
+.searchInput::placeholder {
+  color: #cbd5e1;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  color: #475569;
+
+}
+
+/* ── Options list ── */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  max-height: 210px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 0.855rem;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.12s;
+  user-select: none;
+}
+
+.option:hover,
+.highlighted {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.selected {
+  color: #818cf8;
+}
+
+.empty {
+  padding: 12px 10px;
+  color: #64748b;
+  font-size: 0.8rem;
+  text-align: center;
+}

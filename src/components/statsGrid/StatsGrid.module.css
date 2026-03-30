@@ -13,13 +13,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: #fff;
+  background: var(--color-bg-surface);
   cursor: pointer;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 10px;
-  border: 1px solid #F1F5F9;
+  /* border: 1px solid #F1F5F9; */
   /* prevent card from ever overflowing its grid cell */
   min-width: 0;
   overflow: hidden;
@@ -48,7 +48,7 @@
 .stat_content h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--color-text-onsurface);
   margin: 0;
   line-height: 1;
 }

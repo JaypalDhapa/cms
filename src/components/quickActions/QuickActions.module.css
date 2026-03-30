@@ -13,17 +13,18 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #fff;
+  background: var(--color-bg-surface);
   cursor: pointer;
   padding: 24px 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 10px;
-  border: 1px solid #F1F5F9;
+  /* border: 1px solid #F1F5F9; */
   min-width: 0;
   text-align: center;
   text-decoration: none;
   color: inherit;
+  /* color: var(--color-text-onsurface); */
 }
 
 .quickBtn:hover {
@@ -45,7 +46,7 @@
 .title {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--color-text-onsurface);
 }
 
 /* ── Responsive breakpoints ─────────────────── */

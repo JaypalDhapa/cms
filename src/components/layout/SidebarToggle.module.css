@@ -1,0 +1,18 @@
+/* src/components/layout/SidebarToggle.module.css */
+
+.toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  
+  .toggle:hover {
+    background: #f1f5f9;
+    color: #475569;
+  }

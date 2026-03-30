@@ -17,8 +17,8 @@
     flex: 1 1 0;
     min-width: 0;        /* CRITICAL: flex child must have min-width:0 to shrink */
     max-width: 100%;
-    background: #fff;
-    border: 1px solid #E2E8F0;
+    background: var(--color-bg-surface);
+    /* border: 1px solid #E2E8F0; */
     border-radius: 12px;
     /* overflow: hidden; */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -26,7 +26,7 @@
   
   .activity_card {
     flex: 0 0 260px;
-    background: #fff;
+    background: var(--color-bg-surface);
     border: 1px solid #E2E8F0;
     border-radius: 12px;
     overflow: hidden;
@@ -41,11 +41,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #FAFAFA;
+    background: var( --color-bg-secondryonsurface);
   }
   
   .card_title {
-    color: #1E293B;
+    color: var(--color-text-onsurface);
     font-size: 0.9rem;
     font-weight: 700;
     letter-spacing: -0.01em;
@@ -54,7 +54,7 @@
   .view_all_btn {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--color-text-onsurface);
     background: transparent;
     border: none;
     border-radius: 6px;
@@ -92,7 +92,7 @@
   }
   
   thead {
-    background: #F8FAFC;
+    background: var( --color-bg-onsurface);
   }
   
   th {
@@ -102,7 +102,7 @@
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.07em;
-    color: #94A3B8;
+    color: var(--color-text-onsurface);
     border-bottom: 1px solid #E2E8F0;
     white-space: nowrap;
     cursor: pointer;
@@ -110,12 +110,12 @@
   }
   
   th:hover {
-    color: #64748B;
+    color: #0c71fe;
   }
   
   td {
     padding: 13px 16px;
-    border-bottom: 1px solid #F1F5F9;
+    border-bottom: 1px solid var(--color-border-surface);
     vertical-align: middle;
     color: #475569;
     white-space: nowrap;
@@ -126,12 +126,12 @@
   }
   
   .table_row:hover td {
-    background: #F8FAFC;
+    /* background: #ffffff; */
   }
   
   .td_title {
     font-weight: 600;
-    color: #1E293B;
+    color: var(--color-text-onsurface);
     max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -139,7 +139,7 @@
   }
   
   .td_date {
-    color: #94A3B8;
+    color: var(--color-text-onsurface);
     font-size: 0.8rem;
   }
   
@@ -176,7 +176,7 @@
   }
   
   /* ── Activity Card ──────────────────────────── */
-  
+   
   .activity_placeholder {
     padding: 40px 20px;
     text-align: center;

@@ -6,6 +6,7 @@ import EditTutorialPage from "./pages/EditTutorial";
 import EditTutorialForm from "./pages/EditTutorialForm";
 import DeleteTutorialPage from "./pages/DeleteTutorial";
 import CategoriesPage from "./pages/Categories";
+import Dropdown from "./pages/Dropdown";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path="/tutorial/delete" element={<DeleteTutorialPage />} />
       <Route path="/tutorials" element={<TutorialsPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
+      <Route path="/dropdown" element={<Dropdown />} />
     </Routes>
   );
 };

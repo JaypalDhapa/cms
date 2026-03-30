@@ -1,0 +1,52 @@
+/* src/components/layout/Header.module.css */
+
+.header {
+    height: 60px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .iconBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }

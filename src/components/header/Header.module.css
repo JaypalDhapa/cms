@@ -1,41 +1,151 @@
-.topbar{
-    height: 60px;
-    background: #fff;
-    border-bottom: 1px solid #aaa;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 28px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
+
+
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar {
+  height: 60px;
+  background: var(--color-bg-surface);
+  border-bottom: 1px solid var(--topbar-border);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.topbar_left{
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.topbar_left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.page_title{
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: red;
+.page_title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-onsurface);
+  transition: color 0.2s ease;
 }
 
-.topbar_right{
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.topbar_right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
+/* ── Icon Button ────────────────────────────────────── */
+.icon_btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: var(--icon-btn-bg);
+  color: var(--icon-btn-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
 
+.icon_btn:hover {
+  background: var(--icon-btn-hover-bg);
+}
+
+.icon_btn_active {
+  background: var(--icon-btn-active-bg);
+}
+
+/* ── Theme Dropdown Wrapper ─────────────────────────── */
+.theme_wrapper {
+  position: relative;
+}
+
+/* ── Dropdown Panel ─────────────────────────────────── */
+.theme_dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 192px;
+  background: var(--dropdown-bg);
+  border: 1px solid var(--dropdown-border);
+  border-radius: 10px;
+  box-shadow: var(--dropdown-shadow);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropdownFadeIn 0.15s ease;
+  z-index: 100;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Dropdown Option ────────────────────────────────── */
+.theme_option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--option-text);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.theme_option:hover {
+  background: var(--option-hover-bg);
+}
+
+.theme_option_active {
+  background: var(--option-active-bg);
+  color: var(--option-active-color);
+}
+
+.theme_option_icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.theme_option_label {
+  flex: 1;
+}
+
+.theme_check {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--check-color);
+}
+
+/* ── Avatar ─────────────────────────────────────────── */
 .topbar_avatar {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, #4F46E5, #7C3AED);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-size: .8rem;
-    font-weight: 700;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #4F46E5, #7C3AED);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
-
