@@ -9,7 +9,6 @@ export const GET_COURSES = gql`
           id
           name
           slug
-          description
           isPublished
           order
         }
@@ -26,7 +25,6 @@ export const GET_COURSE = gql`
       id
       name
       slug
-      description
       isPublished
       createdAt
       updatedAt

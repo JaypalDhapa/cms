@@ -7,8 +7,6 @@ export const CREATE_COURSE = gql`
       id
       name
       slug
-      description
-      icon
       order
       isPublished
       createdAt
@@ -24,8 +22,6 @@ export const UPDATE_COURSE = gql`
       id
       name
       slug
-      description
-      icon
       order
       isPublished
       createdAt

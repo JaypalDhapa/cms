@@ -1,18 +1,79 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import PageLayout from "../components/pageLayout/PageLayout";
 import Header from "../components/header/Header";
 import { CATEGORIES } from "../data/tutorialData";
 import Styles from "./Categories.module.css";
-import { Search, Plus, Pencil, Trash2, X, Check } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, X, Check, ChevronDown } from "lucide-react";
 
 // ── Build initial state ───────────────────────────────────────
 function buildInitial() {
   return Object.entries(CATEGORIES).map(([name, lessons], i) => ({
     id: i + 1,
     name,
+    slug: name.toLowerCase().replace(/\s+/g, "-"),
     lessons: [...lessons],
+    isPublished: false,
+    order: i + 1,
   }));
 }
+
+// ── Custom Order Dropdown ─────────────────────────────────────
+const OrderDropdown = ({ value, onChange }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const options = [
+    { value: "auto", label: "Auto" },
+    { value: "custom", label: "Custom" },
+  ];
+
+  const selected = options.find((o) => o.value === value);
+
+  return (
+    <div className={Styles.customDropdown} ref={ref}>
+      <button
+        type="button"
+        className={`${Styles.dropdownTrigger} ${open ? Styles.dropdownTriggerOpen : ""}`}
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span>{selected?.label}</span>
+        <ChevronDown
+          size={14}
+          className={`${Styles.dropdownChevron} ${open ? Styles.dropdownChevronOpen : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className={Styles.dropdownMenu}>
+          {options.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              className={`${Styles.dropdownItem} ${value === opt.value ? Styles.dropdownItemActive : ""}`}
+              onClick={() => {
+                onChange(opt.value);
+                setOpen(false);
+              }}
+            >
+              <span className={Styles.dropdownItemCheck}>
+                {value === opt.value && <Check size={11} />}
+              </span>
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ── Toast ─────────────────────────────────────────────────────
 const Toast = ({ message, type, onHide }) => {
@@ -63,26 +124,54 @@ const DeleteModal = ({ category, onCancel, onConfirm }) => {
 };
 
 // ── Edit Modal ────────────────────────────────────────────────
-const EditModal = ({ category, onCancel, onSave }) => {
-  const [name, setName] = useState("");
-  const [lessonsInput, setLessonsInput] = useState("");
-  const [nameErr, setNameErr] = useState("");
+const EditModal = ({ category, totalCount, onCancel, onSave }) => {
+  const [form, setFormState] = useState(null);
+  const [errors, setErrors] = useState({});
+  const slugManual = useRef(false);
 
-  // Fill form whenever a new category is passed in
   useEffect(() => {
     if (category) {
-      setName(category.name);
-      setLessonsInput(category.lessons.join(", "));
-      setNameErr("");
+      slugManual.current = true;
+      setFormState({
+        name: category.name,
+        slug: category.slug || category.name.toLowerCase().replace(/\s+/g, "-"),
+        isPublished: category.isPublished ?? false,
+        orderMode: "custom",
+        order: String(category.order ?? ""),
+      });
+      setErrors({});
     }
   }, [category]);
 
-  if (!category) return null;
+  useEffect(() => {
+    if (!form || slugManual.current) return;
+    setFormState((f) => ({
+      ...f,
+      slug: f.name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"),
+    }));
+  }, [form?.name]);
+
+  if (!category || !form) return null;
+
+  const setField = (key, value) => {
+    setFormState((f) => ({ ...f, [key]: value }));
+    setErrors((e) => ({ ...e, [key]: "" }));
+  };
 
   const handleSave = () => {
-    if (!name.trim()) { setNameErr("Category name is required"); return; }
-    const lessons = lessonsInput.split(",").map((l) => l.trim()).filter(Boolean);
-    onSave({ ...category, name: name.trim(), lessons });
+    const errs = {};
+    if (!form.name.trim()) errs.name = "Category name is required";
+    if (form.orderMode === "custom" && !form.order.toString().trim())
+      errs.order = "Order value is required";
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+
+    onSave({
+      ...category,
+      name: form.name.trim(),
+      slug: form.slug,
+      isPublished: form.isPublished,
+      order: form.orderMode === "auto" ? totalCount : parseInt(form.order, 10),
+    });
   };
 
   return (
@@ -97,37 +186,80 @@ const EditModal = ({ category, onCancel, onSave }) => {
         </div>
 
         <div className={Styles.modalBody}>
+          {/* Name */}
           <div className={Styles.formGroup}>
             <label className={Styles.label}>
               Category Name <span className={Styles.req}>*</span>
             </label>
             <input
-              className={`${Styles.input} ${nameErr ? Styles.inputErr : ""}`}
+              className={`${Styles.input} ${errors.name ? Styles.inputErr : ""}`}
               placeholder="e.g. TypeScript"
-              value={name}
-              onChange={(e) => { setName(e.target.value); setNameErr(""); }}
-              onKeyDown={(e) => { if (e.key === "Enter") handleSave(); }}
+              value={form.name}
               autoFocus
+              onChange={(e) => { slugManual.current = false; setField("name", e.target.value); }}
+              onKeyDown={(e) => { if (e.key === "Enter") handleSave(); }}
             />
-            {nameErr && <span className={Styles.errMsg}>{nameErr}</span>}
+            {errors.name && <span className={Styles.errMsg}>{errors.name}</span>}
           </div>
 
+          {/* Slug */}
+          <div className={Styles.slug_formGroup}>
+            <label className={Styles.label}>Slug</label>
+            <div className={Styles.slugWrap}>
+              <span className={Styles.slugPrefix}>tutorialsite.com/</span>
+              <input
+                className={Styles.input}
+                placeholder="auto-generated-from-title"
+                value={form.slug}
+                onChange={(e) => { slugManual.current = true; setField("slug", e.target.value); }}
+              />
+            </div>
+          </div>
+
+          {/* Status */}
+          <div className={Styles.formGroup}>
+            <label className={Styles.label}>Status</label>
+            <div className={Styles.radioGroup}>
+              {["Draft", "Published"].map((s) => (
+                <label key={s} className={Styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="editStatus"
+                    value={s}
+                    checked={form.isPublished === (s === "Published")}
+                    onChange={() => setField("isPublished", s === "Published")}
+                  />
+                  {s}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Order */}
           <div className={Styles.formGroup} style={{ marginBottom: 0 }}>
-            <label className={Styles.label}>
-              Lessons
-              <span className={Styles.labelHint}>comma separated</span>
-            </label>
-            <textarea
-              className={Styles.textarea}
-              placeholder="Introduction, Basics, Advanced"
-              value={lessonsInput}
-              onChange={(e) => setLessonsInput(e.target.value)}
-              rows={4}
+            <label className={Styles.label}>Order</label>
+            <OrderDropdown
+              value={form.orderMode}
+              onChange={(val) => {
+                setField("orderMode", val);
+                if (val === "auto") setField("order", "");
+              }}
             />
-            {lessonsInput && (
-              <span className={Styles.hintText}>
-                {lessonsInput.split(",").filter((l) => l.trim()).length} lessons
-              </span>
+            {form.orderMode === "custom" && (
+              <div className={Styles.orderInputWrap}>
+                <input
+                  className={`${Styles.input} ${errors.order ? Styles.inputErr : ""}`}
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 3"
+                  value={form.order}
+                  onChange={(e) => setField("order", e.target.value)}
+                />
+                {errors.order && <span className={Styles.errMsg}>{errors.order}</span>}
+              </div>
+            )}
+            {form.orderMode === "auto" && (
+              <span className={Styles.helpText}>Will be placed at the end</span>
             )}
           </div>
         </div>
@@ -143,20 +275,42 @@ const EditModal = ({ category, onCancel, onSave }) => {
   );
 };
 
+// ── Form constants ────────────────────────────────────────────
+const EMPTY_FORM = {
+  name: "",
+  slug: "",
+  isPublished: false,
+  orderMode: "auto",
+  order: "",
+};
+
 // ── Main Page ─────────────────────────────────────────────────
 const CategoriesPage = () => {
   const [categories, setCategories] = useState(buildInitial);
   const [search, setSearch] = useState("");
+  const slugManual = useRef(false);
 
-  // Add form state
-  const [newName, setNewName] = useState("");
-  const [newLessons, setNewLessons] = useState("");
-  const [newNameErr, setNewNameErr] = useState("");
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState({});
 
-  // Modal states
   const [editTarget, setEditTarget] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [toast, setToast] = useState(null);
+
+  // ── Auto slug ─────────────────────────────────────────────
+  useEffect(() => {
+    if (!slugManual.current) {
+      setForm((f) => ({
+        ...f,
+        slug: f.name.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-"),
+      }));
+    }
+  }, [form.name]);
+
+  const setField = (key, value) => {
+    setForm((f) => ({ ...f, [key]: value }));
+    setFormErrors((e) => ({ ...e, [key]: "" }));
+  };
 
   // ── Filter ────────────────────────────────────────────────
   const filtered = useMemo(() => {
@@ -171,26 +325,40 @@ const CategoriesPage = () => {
 
   // ── Add ───────────────────────────────────────────────────
   const handleAdd = () => {
-    const trimName = newName.trim();
-    if (!trimName) { setNewNameErr("Category name is required"); return; }
-    if (categories.find((c) => c.name.toLowerCase() === trimName.toLowerCase())) {
-      setNewNameErr("Category already exists"); return;
-    }
-    const lessons = newLessons.split(",").map((l) => l.trim()).filter(Boolean);
-    setCategories((prev) => [...prev, { id: Date.now(), name: trimName, lessons }]);
-    setNewName("");
-    setNewLessons("");
-    setNewNameErr("");
+    const errors = {};
+    const trimName = form.name.trim();
+    if (!trimName) errors.name = "Category name is required";
+    else if (categories.find((c) => c.name.toLowerCase() === trimName.toLowerCase()))
+      errors.name = "Category already exists";
+    if (form.orderMode === "custom" && !form.order.toString().trim())
+      errors.order = "Order value is required";
+
+    if (Object.keys(errors).length) { setFormErrors(errors); return; }
+
+    setCategories((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: trimName,
+        slug: form.slug || trimName.toLowerCase().replace(/\s+/g, "-"),
+        lessons: [],
+        isPublished: form.isPublished,
+        order: form.orderMode === "auto" ? prev.length + 1 : parseInt(form.order, 10),
+      },
+    ]);
+
+    slugManual.current = false;
+    setForm(EMPTY_FORM);
+    setFormErrors({});
     setToast({ message: `"${trimName}" added!`, type: "success" });
   };
 
   // ── Edit save ─────────────────────────────────────────────
   const handleEditSave = (updated) => {
-    // check duplicate name (excluding self)
     const dup = categories.find(
       (c) => c.name.toLowerCase() === updated.name.toLowerCase() && c.id !== updated.id
     );
-    if (dup) return; // EditModal handles its own error for name
+    if (dup) return;
     setCategories((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     setEditTarget(null);
     setToast({ message: `"${updated.name}" updated!`, type: "success" });
@@ -219,39 +387,89 @@ const CategoriesPage = () => {
             </div>
 
             <div className={Styles.layout}>
-
               {/* ── LEFT: Add Form ── */}
               <div className={Styles.formCard}>
                 <div className={Styles.cardHeader}>
                   <span className={Styles.cardTitle}>Add Category</span>
                 </div>
 
+                {/* Name */}
                 <div className={Styles.formGroup}>
                   <label className={Styles.label}>
                     Category Name <span className={Styles.req}>*</span>
                   </label>
                   <input
-                    className={`${Styles.input} ${newNameErr ? Styles.inputErr : ""}`}
+                    className={`${Styles.input} ${formErrors.name ? Styles.inputErr : ""}`}
                     placeholder="e.g. TypeScript"
-                    value={newName}
-                    onChange={(e) => { setNewName(e.target.value); setNewNameErr(""); }}
+                    value={form.name}
+                    onChange={(e) => { slugManual.current = false; setField("name", e.target.value); }}
                     onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
                   />
-                  {newNameErr && <span className={Styles.errMsg}>{newNameErr}</span>}
+                  {formErrors.name && <span className={Styles.errMsg}>{formErrors.name}</span>}
                 </div>
 
+                {/* Slug */}
+                <div className={Styles.slug_formGroup}>
+                  <label className={Styles.label}>Slug</label>
+                  <div className={Styles.slugWrap}>
+                    <span className={Styles.slugPrefix}>tutorialsite.com/</span>
+                    <input
+                      className={Styles.input}
+                      placeholder="auto-generated-from-title"
+                      value={form.slug}
+                      onChange={(e) => { slugManual.current = true; setField("slug", e.target.value); }}
+                    />
+                  </div>
+                  <span className={Styles.helpText}>Leave blank to auto-generate from title</span>
+                </div>
+
+                {/* Status */}
                 <div className={Styles.formGroup}>
-                  <label className={Styles.label}>
-                    Lessons
-                    <span className={Styles.labelHint}>comma separated</span>
-                  </label>
-                  <textarea
-                    className={Styles.textarea}
-                    placeholder="Introduction, Basics, Advanced"
-                    value={newLessons}
-                    onChange={(e) => setNewLessons(e.target.value)}
-                    rows={4}
+                  <label className={Styles.label}>Status</label>
+                  <div className={Styles.radioGroup}>
+                    {["Draft", "Published"].map((s) => (
+                      <label key={s} className={Styles.radioLabel}>
+                        <input
+                          type="radio"
+                          name="status"
+                          value={s}
+                          checked={form.isPublished === (s === "Published")}
+                          onChange={() => setField("isPublished", s === "Published")}
+                        />
+                        {s}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Order */}
+                <div className={Styles.formGroup}>
+                  <label className={Styles.label}>Order</label>
+                  <OrderDropdown
+                    value={form.orderMode}
+                    onChange={(val) => {
+                      setField("orderMode", val);
+                      if (val === "auto") setField("order", "");
+                    }}
                   />
+                  {form.orderMode === "custom" && (
+                    <div className={Styles.orderInputWrap}>
+                      <input
+                        className={`${Styles.input} ${formErrors.order ? Styles.inputErr : ""}`}
+                        type="number"
+                        min="1"
+                        placeholder="e.g. 3"
+                        value={form.order}
+                        onChange={(e) => setField("order", e.target.value)}
+                      />
+                      {formErrors.order && <span className={Styles.errMsg}>{formErrors.order}</span>}
+                    </div>
+                  )}
+                  {form.orderMode === "auto" && (
+                    <span className={Styles.helpText}>
+                      Will be placed at position {categories.length + 1}
+                    </span>
+                  )}
                 </div>
 
                 <button className={Styles.addBtn} onClick={handleAdd}>
@@ -266,7 +484,6 @@ const CategoriesPage = () => {
                   <span className={Styles.totalCount}>{categories.length} total</span>
                 </div>
 
-                {/* Search */}
                 <div className={Styles.tableControls}>
                   <div className={Styles.searchWrap}>
                     <Search size={14} className={Styles.searchIcon} />
@@ -284,7 +501,6 @@ const CategoriesPage = () => {
                   </div>
                 </div>
 
-                {/* Table */}
                 <div className={Styles.tableWrap}>
                   <table className={Styles.table}>
                     <thead>
@@ -315,15 +531,10 @@ const CategoriesPage = () => {
                             <td className={Styles.tdLessons}>
                               {cat.lessons.length} lesson{cat.lessons.length !== 1 ? "s" : ""}
                             </td>
-                            <td>
-                              <span className={Styles.countBadge}>0</span>
-                            </td>
+                            <td><span className={Styles.countBadge}>0</span></td>
                             <td>
                               <div className={Styles.actionBtns}>
-                                <button
-                                  className={Styles.actionBtn}
-                                  onClick={() => setEditTarget(cat)}
-                                >
+                                <button className={Styles.actionBtn} onClick={() => setEditTarget(cat)}>
                                   <Pencil size={13} /> Edit
                                 </button>
                                 <button
@@ -341,25 +552,22 @@ const CategoriesPage = () => {
                   </table>
                 </div>
               </div>
-
             </div>
           </div>
 
-          {/* ── Edit overlay modal ── */}
           <EditModal
             category={editTarget}
+            totalCount={categories.length}
             onCancel={() => setEditTarget(null)}
             onSave={handleEditSave}
           />
 
-          {/* ── Delete overlay modal ── */}
           <DeleteModal
             category={deleteTarget}
             onCancel={() => setDeleteTarget(null)}
             onConfirm={handleDeleteConfirm}
           />
 
-          {/* ── Toast ── */}
           {toast && (
             <Toast message={toast.message} type={toast.type} onHide={() => setToast(null)} />
           )}
