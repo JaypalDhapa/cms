@@ -84,6 +84,7 @@
   color: #374151;
 }
 
+
 /* ── Slug ────────────────────────────────────────────────────── */
 .slugWrap {
   display: flex;
@@ -91,16 +92,16 @@
   min-width: 0;
   overflow: hidden;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #E2E8F0;
 }
 
 .slugPrefix {
-  font-family: "JetBrains Mono", monospace;
+  font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
-  color: #64748b;
-  background: #f8fafc;
+  color: #64748B;
+  background: #F8FAFC;
   padding: 9px 8px;
-  border-right: 1px solid #e2e8f0;
+  border-right: 1px solid #E2E8F0;
   white-space: nowrap;
   flex-shrink: 0;
   /* truncate long domain on small screens */
@@ -112,11 +113,7 @@
 }
 
 @media (max-width: 400px) {
-  .slugPrefix {
-    max-width: 80px;
-    font-size: 0.65rem;
-    padding: 9px 6px;
-  }
+  .slugPrefix { max-width: 80px; font-size: 0.65rem; padding: 9px 6px; }
 }
 
 .slugWrap .input {
@@ -130,15 +127,13 @@
   outline: none;
 }
 .slugWrap:focus-within {
-  border-color: #4f46e5;
+  border-color: #4F46E5;
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.fullWidth {
-  grid-column: 1 / -1;
-}
+.fullWidth { grid-column: 1 / -1; }
 
-.slug_formGroup {
+.slug_formGroup{
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -158,8 +153,9 @@
 
 .helpText {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: #94A3B8;
 }
+
 
 .radioGroup {
   display: flex;
@@ -215,6 +211,86 @@
   color: #ef4444;
 }
 
+/* Disabled inputs */
+.input:disabled,
+.textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #f8fafc;
+}
+
+/* Spinner animation */
+.spinIcon {
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error banner ──────────────────────────────────────────── */
+.errorBanner {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+/* ── Loading state (table) ─────────────────────────────────── */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 24px;
+  color: #94a3b8;
+}
+.loadingState p {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* ── Status badges ─────────────────────────────────────────── */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 99px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.statusPublished {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.statusDraft {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+/* ── Table slug / order columns ────────────────────────────── */
+.tdSlug {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-family: 'JetBrains Mono', monospace;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tdOrder {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ── Custom Order Dropdown ─────────────────────────────────── */
 .customDropdown {
   position: relative;
@@ -247,7 +323,11 @@
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.dropdownChevron {
+.dropdownTriggerDisabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+
   color: #94a3b8;
   transition: transform 0.18s ease;
   flex-shrink: 0;
@@ -1032,4 +1112,46 @@
   border: 1px solid #1e2235;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
   color: #e2e8f0;
+}
+
+/* ── Error banner ── */
+[data-theme="dark"] .errorBanner {
+  background: rgba(220, 38, 38, 0.1);
+  border-color: rgba(220, 38, 38, 0.25);
+  color: #f87171;
+}
+
+/* ── Loading state ── */
+[data-theme="dark"] .loadingState {
+  color: #3a4468;
+}
+[data-theme="dark"] .loadingState p {
+  color: #3a4468;
+}
+
+/* ── Status badges ── */
+[data-theme="dark"] .statusPublished {
+  background: rgba(22, 163, 74, 0.12);
+  color: #4ade80;
+}
+[data-theme="dark"] .statusDraft {
+  background: rgba(99, 102, 241, 0.08);
+  color: #3a4468;
+}
+
+/* ── Table slug / order columns ── */
+[data-theme="dark"] .tdSlug {
+  color: #3a4468;
+}
+[data-theme="dark"] .tdOrder {
+  color: #3a4468;
+}
+
+/* ── Disabled inputs ── */
+[data-theme="dark"] .input:disabled,
+[data-theme="dark"] .textarea:disabled {
+  background: #0a0c12;
+}
+[data-theme="dark"] .dropdownTriggerDisabled {
+  background: #0a0c12;
 }
