@@ -544,3 +544,239 @@
   text-align: center;
   font-style: italic;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE — DeleteTutorial
+   Only bg / color changes. Light mode above is untouched.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Page Header ── */
+[data-theme="dark"] .pageHeader h2 {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .pageHeader p {
+  color: #64748b;
+}
+
+/* ── Success Banner ── */
+[data-theme="dark"] .successBanner {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+[data-theme="dark"] .successDismiss {
+  color: #34d399;
+}
+
+/* ── Selector Card ── */
+[data-theme="dark"] .selectorCard {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+}
+[data-theme="dark"] .selectorCardTitle {
+  color: #4a5568;
+}
+[data-theme="dark"] .selectorLabel {
+  color: #94a3b8;
+}
+[data-theme="dark"] .selectorBadge {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+}
+[data-theme="dark"] .selectorArrow {
+  color: #2d3748;
+}
+
+/* ── Searchable Dropdown trigger ── */
+[data-theme="dark"] .sdTrigger {
+  background: #141720;
+  border-color: #2a2f3d;
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdTrigger:hover {
+  border-color: #3a4055;
+}
+[data-theme="dark"] .sdTrigger:focus-visible {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+[data-theme="dark"] .sdValue {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdPlaceholder {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdChevron {
+  color: #4a5568;
+}
+
+/* ── Dropdown Panel ── */
+[data-theme="dark"] .sdPanel {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+[data-theme="dark"] .sdSearchWrap {
+  background: #141720;
+  border-bottom-color: #2a2f3d;
+}
+[data-theme="dark"] .sdSearchIcon {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdSearchInput {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdSearchInput::placeholder {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdClear {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdClear:hover {
+  color: #94a3b8;
+}
+[data-theme="dark"] .sdList {
+  scrollbar-color: #2a2f3d transparent;
+}
+[data-theme="dark"] .sdList::-webkit-scrollbar-thumb {
+  background: #2a2f3d;
+}
+[data-theme="dark"] .sdOption {
+  color: #8892a4;
+}
+[data-theme="dark"] .sdOption:hover,
+[data-theme="dark"] .sdHighlighted {
+  background: #1e2130;
+}
+[data-theme="dark"] .sdSelected {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+}
+[data-theme="dark"] .sdSelected svg {
+  color: #f87171;
+}
+[data-theme="dark"] .sdEmpty {
+  color: #4a5568;
+}
+
+/* ── Tutorial Card ── */
+[data-theme="dark"] .tutorialCard {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+}
+[data-theme="dark"] .cardThumb {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(220, 38, 38, 0.12));
+  color: rgba(239, 68, 68, 0.4);
+}
+[data-theme="dark"] .cardCategory {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+}
+[data-theme="dark"] .cardLesson {
+  color: #4a5568;
+}
+[data-theme="dark"] .badgePublished {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+}
+[data-theme="dark"] .badgeDraft {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+[data-theme="dark"] .cardTitle {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .cardDesc {
+  color: #64748b;
+}
+[data-theme="dark"] .cardFooter {
+  border-top-color: #2a2f3d;
+}
+[data-theme="dark"] .cardAuthor {
+  color: #64748b;
+}
+[data-theme="dark"] .cardDate {
+  color: #4a5568;
+}
+[data-theme="dark"] .cardSlug {
+  color: #4a5568;
+}
+[data-theme="dark"] .cardActions {
+  background: #141720;
+  border-top-color: #2a2f3d;
+}
+
+/* ── Buttons ── */
+[data-theme="dark"] .cancelBtn {
+  background: #1e2130;
+  color: #8892a4;
+  border-color: #2a2f3d;
+}
+[data-theme="dark"] .cancelBtn:hover {
+  background: #252a38;
+  color: #e2e8f0;
+}
+[data-theme="dark"] .deleteBtn {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+[data-theme="dark"] .deleteBtn:hover {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+[data-theme="dark"] .confirmDeleteBtn {
+  background: #dc2626;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+}
+[data-theme="dark"] .confirmDeleteBtn:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 20px rgba(220, 38, 38, 0.5);
+}
+
+/* ── Warning Box ── */
+[data-theme="dark"] .warningBox {
+  background: rgba(217, 119, 6, 0.08);
+  border-color: rgba(217, 119, 6, 0.2);
+}
+[data-theme="dark"] .warningIcon {
+  background: rgba(217, 119, 6, 0.12);
+  color: #fbbf24;
+}
+[data-theme="dark"] .warningTitle {
+  color: #fbbf24;
+}
+[data-theme="dark"] .warningDesc {
+  color: #92400e;
+  color: #d97706;
+}
+[data-theme="dark"] .warningDesc strong {
+  color: #fbbf24;
+}
+
+/* ── Confirm Card ── */
+[data-theme="dark"] .confirmCard {
+  background: #1a1d23;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+[data-theme="dark"] .confirmLabel {
+  color: #f87171;
+}
+[data-theme="dark"] .confirmTitle {
+  color: #e2e8f0;
+}
+
+/* ── Placeholder ── */
+[data-theme="dark"] .placeholder {
+  color: #2d3748;
+}
+[data-theme="dark"] .placeholderIcon {
+  background: rgba(239, 68, 68, 0.08);
+  color: rgba(239, 68, 68, 0.25);
+}
+[data-theme="dark"] .placeholder p {
+  color: #4a5568;
+}
+[data-theme="dark"] .placeholder p strong {
+  color: #64748b;
+}

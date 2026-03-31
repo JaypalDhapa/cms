@@ -625,3 +625,220 @@
   text-align: center;
   font-style: italic;
 }
+
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE — EditTutorial
+   Only bg / color changes. Light mode above is untouched.
+══════════════════════════════════════════════════════════════ */
+
+/* ── Page Header ── */
+[data-theme="dark"] .pageHeader h2 {
+  color: #f1f5f9;
+}
+[data-theme="dark"] .pageHeader p {
+  color: #64748b;
+}
+
+/* ── Selector Card ── */
+[data-theme="dark"] .selectorCard {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+}
+[data-theme="dark"] .selectorCardTitle {
+  color: #4a5568;
+}
+[data-theme="dark"] .selectorLabel {
+  color: #94a3b8;
+}
+[data-theme="dark"] .selectorStepBadge {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+}
+[data-theme="dark"] .optionalTag {
+  background: #1e2130;
+  color: #4a5568;
+}
+[data-theme="dark"] .selectorArrow {
+  color: #2d3748;
+}
+
+/* ── Searchable Dropdown trigger ── */
+[data-theme="dark"] .sdTrigger {
+  background: #141720;
+  border-color: #2a2f3d;
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdTrigger:hover {
+  border-color: #3a4055;
+}
+[data-theme="dark"] .sdTrigger:focus-visible {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+[data-theme="dark"] .sdValue {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdPlaceholder {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdChevron {
+  color: #4a5568;
+}
+
+/* ── Dropdown Panel ── */
+[data-theme="dark"] .sdPanel {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+}
+[data-theme="dark"] .sdSearchWrap {
+  background: #141720;
+  border-bottom-color: #2a2f3d;
+}
+[data-theme="dark"] .sdSearchIcon {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdSearchInput {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .sdSearchInput::placeholder {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdClear {
+  color: #4a5568;
+}
+[data-theme="dark"] .sdClear:hover {
+  color: #94a3b8;
+}
+[data-theme="dark"] .sdList {
+  scrollbar-color: #2a2f3d transparent;
+}
+[data-theme="dark"] .sdList::-webkit-scrollbar-thumb {
+  background: #2a2f3d;
+}
+[data-theme="dark"] .sdOption {
+  color: #8892a4;
+}
+[data-theme="dark"] .sdOption:hover,
+[data-theme="dark"] .sdHighlighted {
+  background: #1e2130;
+}
+[data-theme="dark"] .sdSelected {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+}
+[data-theme="dark"] .sdSelected svg {
+  color: #6366f1;
+}
+[data-theme="dark"] .sdEmpty {
+  color: #4a5568;
+}
+
+/* ── Results Header ── */
+[data-theme="dark"] .resultsCount {
+  color: #64748b;
+}
+[data-theme="dark"] .resultsCount strong {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .resultsCount em {
+  color: #818cf8;
+}
+[data-theme="dark"] .clearFilter {
+  border-color: #2a2f3d;
+  color: #64748b;
+  background: transparent;
+}
+[data-theme="dark"] .clearFilter:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+/* ── Tutorial Card ── */
+[data-theme="dark"] .card {
+  background: #1a1d23;
+  border-color: #2a2f3d;
+}
+[data-theme="dark"] .card:hover {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  border-color: rgba(99, 102, 241, 0.35);
+}
+[data-theme="dark"] .cardThumb {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.12));
+  color: #6366f1;
+}
+[data-theme="dark"] .cardCategory {
+  background: rgba(99, 102, 241, 0.12);
+  color: #a5b4fc;
+}
+[data-theme="dark"] .cardLesson {
+  color: #4a5568;
+}
+[data-theme="dark"] .badgePublished {
+  background: rgba(16, 185, 129, 0.12);
+  color: #34d399;
+}
+[data-theme="dark"] .badgeDraft {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+[data-theme="dark"] .cardTitle {
+  color: #e2e8f0;
+}
+[data-theme="dark"] .cardDesc {
+  color: #64748b;
+}
+[data-theme="dark"] .cardFooter {
+  border-top-color: #2a2f3d;
+}
+[data-theme="dark"] .cardAuthor {
+  color: #64748b;
+}
+[data-theme="dark"] .cardDate {
+  color: #4a5568;
+}
+
+/* ── Card Actions ── */
+[data-theme="dark"] .cardActions {
+  background: #141720;
+  border-top-color: #2a2f3d;
+}
+[data-theme="dark"] .editBtn {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+}
+[data-theme="dark"] .editBtn:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5);
+}
+
+/* ── Empty State ── */
+[data-theme="dark"] .empty {
+  color: #2d3748;
+}
+[data-theme="dark"] .empty p {
+  color: #4a5568;
+}
+[data-theme="dark"] .empty span {
+  color: #374151;
+}
+[data-theme="dark"] .empty span strong {
+  color: #64748b;
+}
+
+/* ── Placeholder ── */
+[data-theme="dark"] .placeholder {
+  color: #2d3748;
+}
+[data-theme="dark"] .placeholderIcon {
+  background: #1e2130;
+  color: #2d3748;
+}
+[data-theme="dark"] .placeholder p {
+  color: #4a5568;
+}
+[data-theme="dark"] .placeholder p strong {
+  color: #64748b;
+}
