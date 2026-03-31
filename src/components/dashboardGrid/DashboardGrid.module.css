@@ -27,7 +27,7 @@
   .activity_card {
     flex: 0 0 260px;
     background: var(--color-bg-surface);
-    border: 1px solid #E2E8F0;
+    border: 1px solid var(--card-border);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -37,7 +37,7 @@
   
   .card_header {
     padding: 16px 20px;
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid var(--card-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -65,8 +65,7 @@
   }
   
   .view_all_btn:hover {
-    background: #F1F5F9;
-    /* color: #fff; */
+    background: var(--table-row-hover-bg);
   }
   
   /* ── Table Scroll Wrapper ───────────────────── */
@@ -103,7 +102,7 @@
     text-transform: uppercase;
     letter-spacing: 0.07em;
     color: var(--color-text-onsurface);
-    border-bottom: 1px solid #E2E8F0;
+    border-bottom: 1px solid var(--table-th-border);
     white-space: nowrap;
     cursor: pointer;
     user-select: none;
@@ -117,7 +116,7 @@
     padding: 13px 16px;
     border-bottom: 1px solid var(--color-border-surface);
     vertical-align: middle;
-    color: #475569;
+    color: var(--table-td-color);
     white-space: nowrap;
   }
   
@@ -126,7 +125,7 @@
   }
   
   .table_row:hover td {
-    /* background: #ffffff; */
+    background: var(--table-row-hover-bg);
   }
   
   .td_title {
@@ -156,23 +155,23 @@
   }
   
   .badge_category {
-    color: #6366F1;
-    background-color: #EEF2FF;
+    color: var(--badge-category-color);
+    background-color: var(--badge-category-bg);
   }
   
   .badge_published {
-    color: #16A34A;
-    background-color: #DCFCE7;
+    color: var(--badge-published-color);
+    background-color: var(--badge-published-bg);
   }
   
   .badge_draft {
-    color: #D97706;
-    background-color: #FEF3C7;
+    color: var(--badge-draft-color);
+    background-color: var(--badge-draft-bg);
   }
   
   .badge_review {
-    color: #0284C7;
-    background-color: #E0F2FE;
+    color: var(--badge-review-color);
+    background-color: var(--badge-review-bg);
   }
   
   /* ── Activity Card ──────────────────────────── */
@@ -180,7 +179,7 @@
   .activity_placeholder {
     padding: 40px 20px;
     text-align: center;
-    color: #CBD5E1;
+    color: var(--activity-empty-color);
     font-size: 0.85rem;
   }
   

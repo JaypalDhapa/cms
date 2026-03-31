@@ -55,7 +55,7 @@
 
 .title {
   font-size: 0.75rem;
-  color: #94A3B8;
+  color: var(--stat-label-color);
   font-weight: 500;
   white-space: nowrap;
 }

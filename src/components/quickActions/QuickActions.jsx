@@ -24,15 +24,15 @@ function QuickAcitonBtn({ title, icon,to }) {
 const QuickActions = () => {
   return (
     <>
-      <h3 style={{marginBottom:"24px", color:"#daddd8"}}>Quck Action</h3>
+      <h3 style={{marginBottom:"24px", color:"var(--quick-heading-color)"}}>Quck Action</h3>
     <div className={Styles.quick_actions}>
       <QuickAcitonBtn
         to="/tutorial"
         title="Add tutorial"
         icon={{
           component: Plus,
-          bg: "#EEF2FF",
-          color: "#4F46E5",
+          bg: "var(--quick-btn-add-bg)",
+          color: "var(--quick-btn-add-color)",
         }}
       />
        <QuickAcitonBtn
@@ -40,8 +40,8 @@ const QuickActions = () => {
         title="View all"
         icon={{
           component: BookAudio,
-          bg: "#a5e4a5",
-          color: "#057432",
+          bg: "var(--quick-btn-view-bg)",
+          color: "var(--quick-btn-view-color)",
         }}
       />
        <QuickAcitonBtn
@@ -49,16 +49,16 @@ const QuickActions = () => {
         title="Categories"
         icon={{
           component: Plus,
-          bg: "red",
-          color: "yellow",
+          bg: "var(--quick-btn-cat-bg)",
+          color: "var(--quick-btn-cat-color)",
         }}
       />
        <QuickAcitonBtn
         title="Settings"
         icon={{
           component: Plus,
-          bg: "red",
-          color: "yellow",
+          bg: "var(--quick-btn-settings-bg)",
+          color: "var(--quick-btn-settings-color)",
         }}
       />
     </div>

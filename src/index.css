@@ -15,6 +15,43 @@
   --color-bg-icon3:#3638bbb8;
   --color-bg-icon4:#127f94;
 
+  /* ── Dashboard table ── */
+  --table-td-color: #475569;
+  --table-th-border: #E2E8F0;
+  --table-row-hover-bg: #f8fafc;
+  --card-border: #E2E8F0;
+
+  /* ── Stat label ── */
+  --stat-label-color: #94A3B8;
+
+  /* ── Stat card draft icon (light) ── */
+  --stat-icon-draft-bg: rgba(232,166,166,0.27);
+  --stat-icon-draft-color: #ff5f5f;
+
+  /* ── Badges ── */
+  --badge-category-bg: #EEF2FF;
+  --badge-category-color: #6366F1;
+  --badge-published-bg: #DCFCE7;
+  --badge-published-color: #16A34A;
+  --badge-draft-bg: #FEF3C7;
+  --badge-draft-color: #D97706;
+  --badge-review-bg: #E0F2FE;
+  --badge-review-color: #0284C7;
+
+  /* ── Quick Actions ── */
+  --quick-heading-color: #64748b;
+  --quick-btn-add-bg: #EEF2FF;
+  --quick-btn-add-color: #4F46E5;
+  --quick-btn-view-bg: #a5e4a5;
+  --quick-btn-view-color: #057432;
+  --quick-btn-cat-bg: #FFE4E6;
+  --quick-btn-cat-color: #e11d48;
+  --quick-btn-settings-bg: #FEF3C7;
+  --quick-btn-settings-color: #D97706;
+
+  /* ── Activity ── */
+  --activity-empty-color: #CBD5E1;
+
 
 
 
@@ -48,6 +85,60 @@
   --color-bg-icon2:#3638bbb8;
   --color-bg-icon4:#3638bbb8;
   --color-bg-icon5:#3638bbb8;
+
+  /* ── Dashboard table ── */
+  --table-td-color: #a0aec0;
+  --table-th-border: #2d3748;
+  --table-row-hover-bg: #2a2f3a;
+  --card-border: #2d3748;
+
+  /* ── Stat label ── */
+  --stat-label-color: #718096;
+
+  /* ── Stat card draft icon (dark) ── */
+  --stat-icon-draft-bg: rgba(255, 95, 95, 0.15);
+  --stat-icon-draft-color: #ff7a7a;
+
+  /* ── Badges — muted/glassy for dark ── */
+  --badge-category-bg: rgba(99, 102, 241, 0.18);
+  --badge-category-color: #a5b4fc;
+  --badge-published-bg: rgba(22, 163, 74, 0.18);
+  --badge-published-color: #6ee7a0;
+  --badge-draft-bg: rgba(217, 119, 6, 0.18);
+  --badge-draft-color: #fcd34d;
+  --badge-review-bg: rgba(2, 132, 199, 0.18);
+  --badge-review-color: #7dd3fc;
+
+  /* ── Quick Actions ── */
+  --quick-heading-color: #718096;
+  --quick-btn-add-bg: rgba(99, 102, 241, 0.18);
+  --quick-btn-add-color: #a5b4fc;
+  --quick-btn-view-bg: rgba(22, 163, 74, 0.18);
+  --quick-btn-view-color: #6ee7a0;
+  --quick-btn-cat-bg: rgba(225, 29, 72, 0.18);
+  --quick-btn-cat-color: #fda4af;
+  --quick-btn-settings-bg: rgba(217, 119, 6, 0.18);
+  --quick-btn-settings-color: #fcd34d;
+
+  /* ── Activity ── */
+  --activity-empty-color: #4a5568;
+
+  --topbar-bg: #1f2937;
+  --topbar-border: #374151;
+  --title-color: #f9fafb;
+  --icon-btn-bg: transparent;
+  --icon-btn-hover-bg: #374151;
+  --icon-btn-active-bg: #4b5563;
+  --icon-btn-color: #d1d5db;
+  --dropdown-bg: #1f2937;
+  --dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --dropdown-border: #374151;
+  --option-hover-bg: #374151;
+  --option-active-color: #818cf8;
+  --option-active-bg: #312e81;
+  --option-text: #d1d5db;
+  --check-color: #818cf8;
+
 
 
 

@@ -49,8 +49,8 @@ const StatsGrid = () => {
      title="Darft"
      icon={{
       component:NotebookPen, 
-      bg:"rgba(232, 166, 166, 0.27)",
-      iconColor:'#ff5f5f'
+      bg:"var(--stat-icon-draft-bg)",
+      iconColor:'var(--stat-icon-draft-color)'
     }}
       />
 
